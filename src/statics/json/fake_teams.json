@@ -1,0 +1,290 @@
+[
+  {
+    "name": "Warriors",
+    "avatar": "monster1.svg",
+    "players": [
+      {
+        "name": "Polly Perkins"
+      },
+      {
+        "name": "Harley Ayala"
+      },
+      {
+        "name": "Felicity Henry"
+      },
+      {
+        "name": "Georgina Douglas"
+      }
+    ]
+  },
+  {
+    "name": "Blond",
+    "avatar": "monster2.svg",
+    "players": [
+      {
+        "name": "Sabrina Mosley"
+      },
+      {
+        "name": "Sapphire Harmon"
+      },
+      {
+        "name": "Gabrielle Blackwell"
+      },
+      {
+        "name": "Lana Molina"
+      }
+    ]
+  },
+  {
+    "name": "Snooty",
+    "avatar": "monster3.svg",
+    "players": [
+      {
+        "name": "Libby Alvarado"
+      },
+      {
+        "name": "Meghan Andrade"
+      },
+      {
+        "name": "Katherine Contreras"
+      },
+      {
+        "name": "Casey Thornton"
+      }
+    ]
+  },
+  {
+    "name": "Dirty",
+    "avatar": "monster4.svg",
+    "players": [
+      {
+        "name": "Iqra Jacobson"
+      },
+      {
+        "name": "Sharon Woodard"
+      },
+      {
+        "name": "Kara Shannon"
+      },
+      {
+        "name": "Lucia Moses"
+      }
+    ]
+  },
+  {
+    "name": "Spiteful",
+    "avatar": "monster5.svg",
+    "players": [
+      {
+        "name": "Ida Richmond"
+      },
+      {
+        "name": "Nannie Matthews"
+      },
+      {
+        "name": "Isobelle West"
+      },
+      {
+        "name": "Kane Carson"
+      }
+    ]
+  },
+  {
+    "name": "Spiders",
+    "avatar": "monster6.svg",
+    "players": [
+      {
+        "name": "Rosa Duke"
+      },
+      {
+        "name": "Lily Johnson"
+      },
+      {
+        "name": "Amirah Wagner"
+      },
+      {
+        "name": "Elizabeth Gonzalez"
+      }
+    ]
+  },
+  {
+    "name": "Lizards",
+    "avatar": "monster7.svg",
+    "players": [
+      {
+        "name": "Orla Santiago"
+      },
+      {
+        "name": "Betty Merritt"
+      },
+      {
+        "name": "Bella Russo"
+      },
+      {
+        "name": "Harmony Stanton"
+      }
+    ]
+  },
+  {
+    "name": "Badgers",
+    "avatar": "monster8.svg",
+    "players": [
+      {
+        "name": "Caitlin Fields"
+      },
+      {
+        "name": "Deborah Rose"
+      },
+      {
+        "name": "Teresa Donaldson"
+      },
+      {
+        "name": "Holly Allen"
+      }
+    ]
+  },
+  {
+    "name": "Independents",
+    "avatar": "monster9.svg",
+    "players": [
+      {
+        "name": "Sinead Newman"
+      },
+      {
+        "name": "Hana Hilton"
+      },
+      {
+        "name": "Elle Stevens"
+      },
+      {
+        "name": "Billy Stark"
+      }
+    ]
+  },
+  {
+    "name": "United",
+    "avatar": "monster10.svg",
+    "players": [
+      {
+        "name": "Jennifer Higgins"
+      },
+      {
+        "name": "Ciaran Guzman"
+      },
+      {
+        "name": "Eve Snow"
+      },
+      {
+        "name": "Joanna Boyd"
+      }
+    ]
+  },
+  {
+    "name": "Athletic",
+    "avatar": "monster11.svg",
+    "players": [
+      {
+        "name": "Isabelle Quinn"
+      },
+      {
+        "name": "Rhonda Mclean"
+      },
+      {
+        "name": "Aminah Odom"
+      },
+      {
+        "name": "Evie Moody"
+      }
+    ]
+  },
+  {
+    "name": "Tight-fisted",
+    "avatar": "monster12.svg",
+    "players": [
+      {
+        "name": "Annie Knowles"
+      },
+      {
+        "name": "Jerry Holmes"
+      },
+      {
+        "name": "Lia Carlson"
+      },
+      {
+        "name": "Scarlet Padilla"
+      }
+    ]
+  },
+  {
+    "name": "Sticky",
+    "avatar": "monster13.svg",
+    "players": [
+      {
+        "name": "Fatima Rodriguez"
+      },
+      {
+        "name": "Natasha Mccormick"
+      },
+      {
+        "name": "Ayesha Wall"
+      },
+      {
+        "name": "Anna Welsh"
+      }
+    ]
+  },
+  {
+    "name": "Frogs",
+    "avatar": "monster14.svg",
+    "players": [
+      {
+        "name": "Felix Huff"
+      },
+      {
+        "name": "Christina Baker"
+      },
+      {
+        "name": "Cleo Mcguire"
+      },
+      {
+        "name": "Bethan Hanna"
+      }
+    ]
+  },
+  {
+    "name": "Hippos",
+    "avatar": "monster15.svg",
+    "players": [
+      {
+        "name": "Roxanne Brennan"
+      },
+      {
+        "name": "Aysha Carroll"
+      },
+      {
+        "name": "Constance Daugherty"
+      },
+      {
+        "name": "Bailey Butler"
+      }
+    ]
+  },
+  {
+    "name": "Mariners",
+    "avatar": "monster16.svg",
+    "players": [
+      {
+        "name": "Martha Nelson"
+      },
+      {
+        "name": "Troy Tanner"
+      },
+      {
+        "name": "Clara Shelton"
+      },
+      {
+        "name": "Haleema Dunn"
+      }
+    ]
+  }
+]

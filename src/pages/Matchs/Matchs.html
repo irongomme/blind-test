@@ -1,0 +1,105 @@
+<q-page padding class="flex flex-center q-pt-xl">
+  <div class="full-width" v-if="currentRound">
+    <div class="q-gutter-y-md" style="padding-top: 72px;">
+
+      <q-card bordered>
+        <q-tab-panels
+          v-model="matchTab"
+          ref="matchTabs"
+          keep-alive
+          animated>
+          <q-tab-panel
+            :name="matchIndex"
+            v-for="(matchItem, matchIndex) in currentRound" :key="'tab-panel' + matchIndex">
+            <div class="row q-col-gutter-md">
+              <div
+                class="col-3 col-lg-3 col-sm-6"
+                v-for="(matchTeamItem, teamIndex) in currentRound[matchIndex]"
+                :key="matchTeamItem.team.id">
+                <MatchTeamListCard
+                  :matchTeam="matchTeamItem"
+                  :team="matchTeamItem.team"
+                  :color="matchColors[teamIndex]"
+                  :star="isInBestMatchTeam(matchTeamItem.id)"
+                  :lastScored="lastScored === matchTeamItem.id"
+                  @updateScore="updateScore" />
+              </div>
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
+
+        <q-card-section>
+          <q-toolbar class="q-pt-lg">
+            <div class="row full-width">
+              <div class="col-4 text-left">
+                <q-btn
+                  flat
+                  round
+                  color="indigo"
+                  icon="fas fa-backward"
+                  size="xl"
+                  class="q-mr-sm"
+                  :disable="!currentMatch[0].match.is_closed || matchTab === 0"
+                  @click="$refs.matchTabs.previous()" />
+              </div>
+              <div class="col-4 text-center">
+                <q-btn
+                  flat
+                  round
+                  :color="currentMatch[0].match.is_closed ? 'positive' : 'negative'"
+                  icon="fas fa-power-off"
+                  size="xl"
+                  class="q-mx-sm"
+                  @click="switchMatch(currentMatch[0].match_id, currentMatch[0].match.is_closed)" />
+              </div>
+              <div class="col-4 text-right">
+                <q-btn
+                  flat
+                  round
+                  color="indigo"
+                  icon="fas fa-forward"
+                  size="xl"
+                  class="q-ml-sm"
+                  :disable="!currentMatch[0].match.is_closed || matchTab === (currentRound.length - 1)"
+                  @click="$refs.matchTabs.next()" />
+              </div>
+            </div>
+          </q-toolbar>
+        </q-card-section>
+        <q-separator />
+        <q-card-section class="bg-grey-3">
+          <p class="text-center q-pt-md">
+            {{ allScoresCount }} chansons jouées dans ce match
+          </p>
+        </q-card-section>
+      </q-card>
+
+    </div>
+  </div>
+
+  <q-dialog
+    ref="dialog-success"
+    maximized
+    persistent
+    v-model="teamSuccessPopup"
+    transition-show="fade"
+    transition-hide="fade">
+    <q-card dark style="overflow: hidden;">
+      <q-card-section class="text-h3 text-center q-py-xl">
+        <q-icon name="fas fa-star q-mr-lg" style="margin-bottom:22px;" />
+        Point pour
+        <span :class="'text-uppercase text-' + successTeamColor">
+          {{ successTeamName }}
+        </span>
+        <q-icon name="fas fa-star q-ml-lg" style="margin-bottom:22px;" />
+      </q-card-section>
+      <q-card-section class="flex flex-center">
+        <img
+          contain
+          :src="successImage"
+          class="rounded-borders"
+          style="height: 80vh;" />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+</q-page>

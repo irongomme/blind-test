@@ -1,0 +1,80 @@
+<q-page padding class="flex flex-center">
+  <div style="padding-top: 72px;">
+    <q-card
+      flat
+      bordered
+      style="width: 640px;"
+      class="col-3 col-sm-4 col-xs-6 bg-primary">
+      <q-card-section class="bg-indigo text-h6 text-white">
+        <q-icon name="fas fa-meteor" class="q-mr-md" />
+        Réglages de la partie
+      </q-card-section>
+      <q-separator />
+      <q-card-section class="bg-white">
+        <div class="q-col-gutter-md row items-start">
+
+            <q-input
+              outlined
+              v-model="gameForm.numberOfTeams"
+              label="Nombre d'équipe"
+              class="col-6"
+              type="number">
+              <template v-slot:prepend>
+                <q-icon name="fas fa-users" />
+              </template>
+            </q-input>
+            <q-input
+              outlined
+              v-model="gameForm.numberOfTeamsPerMatch"
+              label="Nombre d'équipe par match"
+              class="col-6"
+              type="number">
+              <template v-slot:prepend>
+                <q-icon name="fas fa-user-friends" />
+              </template>
+            </q-input>
+            <q-input
+              outlined
+              v-model="gameForm.minTeamSize"
+              label="Joueurs minimum par équipe"
+              class="col-6"
+              type="number">
+              <template v-slot:prepend>
+                <q-icon name="fas fa-sort-amount-down" />
+              </template>
+            </q-input>
+            <q-input
+              outlined
+              v-model="gameForm.maxTeamSize"
+              label="Joueurs maximum par équipe"
+              class="col-6"
+              type="number">
+              <template v-slot:prepend>
+                <q-icon name="fas fa-sort-amount-up" />
+              </template>
+            </q-input>
+            <q-input
+              outlined
+              v-model="gameForm.maxRounds"
+              label="Nombre de match maximum"
+              class="col-6"
+              type="number">
+              <template v-slot:prepend>
+                <q-icon name="fas fa-dice" />
+              </template>
+            </q-input>
+
+        </div>
+      </q-card-section>
+      <q-card-actions class="bg-indigo-1" align="center">
+        <q-btn
+          flat
+          color="indigo"
+          icon="fas fa-play"
+          :label="game ? 'Lancer une nouvelle partie' : 'Lancer la partie'"
+          @click="newGame()"
+        />
+      </q-card-actions>
+    </q-card>
+  </div>
+</q-page>

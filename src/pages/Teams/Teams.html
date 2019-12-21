@@ -1,0 +1,65 @@
+<q-page padding class="flex column">
+  <div style="padding-top: 72px;">
+    <div class="text-center">
+      <q-btn
+          class="q-pa-lg"
+          size="lg"
+          icon="fas fa-users-cog"
+          color="indigo"
+          text-color="white"
+          @click="generateFakeTeams()"
+          label="Générer des fausses équipes pour tester"
+          v-if="teams.length === 0" />
+    </div>
+
+    <!-- Listing equipes -->
+    <div class="row items-start q-col-gutter-md">
+      <div
+        class="col-3 col-md-3 col-sm-6 col-xs-6"
+        v-for="teamItem in teams"
+        :key="teamItem.id">
+        <TeamListCard
+          :team="teamItem"
+          @delete="confirmTeamDelete(teamItem)"
+          @edit="editTeam"
+          alterable />
+      </div>
+    </div>
+  </div>
+  <!-- Création / modification équipe -->
+  <q-dialog
+    persistent
+    v-model="teamFormPopup"
+    position="top">
+    <TeamFormCard
+      style="max-width: 800px;width: 80%;"
+      v-show="game.isOpened"
+      :team="teamObject"
+      :minPlayers="game.minTeamSize"
+      :maxPlayers="game.maxTeamSize"
+      @save="saveTeam"
+      @delete="deleteTeam(teamObject)"
+      @cancel="resetTeam" />
+  </q-dialog>
+
+  <!-- Suppression équipe -->
+  <q-dialog v-model="deleteTeamConfirm" position="top" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <q-avatar icon="fas fa-exclamation" color="negative" text-color="white" />
+        <span class="q-ml-sm">
+          Tu es sur le point de supprimer l'équipe "{{ deleteTeamItem.name }}"
+        </span>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat label="Annuler" color="primary" v-close-popup />
+        <q-btn
+          flat
+          label="Supprimer"
+          color="primary"
+          v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+</q-page>

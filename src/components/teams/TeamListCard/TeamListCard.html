@@ -1,0 +1,32 @@
+<q-card flat bordered :class="'bg-' + color">
+  <q-card-section class="text-white text-h6">
+    <q-btn
+      flat
+      rounded
+      class="float-right"
+      color="white"
+      icon-right="fas fa-pencil-alt"
+      size="md"
+      v-if="alterable"
+      @click="$emit('edit', team)"
+    />
+    <q-avatar>
+      <img :src="`statics/avatars/${team.avatar}`">
+    </q-avatar>
+    {{ team.name }}
+  </q-card-section>
+
+  <q-list class="bg-white" separator>
+    <q-item clickable v-ripple v-for="player in team.players" :key="player.id">
+      <q-item-section avatar>
+        <q-icon :color="color" name="fas fa-user" />
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>
+          {{ player.name }}
+        </q-item-label>
+      </q-item-section>
+    </q-item>
+  </q-list>
+</q-card>
+

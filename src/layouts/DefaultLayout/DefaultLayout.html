@@ -1,0 +1,112 @@
+<q-layout view="hHr lpR fFr">
+  <div class="fixed-top full-width" style="z-index: 1;">
+    <div class="row no-wrap">
+      <q-toolbar v-if="!hiddenHeader" class="col-8 q-pl-lg q-py-sm navbar-top">
+        <q-btn
+          flat
+          round
+          :glossy="currentPage === '/'"
+          to="/"
+          icon="fas fa-meteor"
+          aria-label="Équipes"
+          color="white"
+          size="lg"
+        />
+        <q-btn
+          flat
+          round
+          class="q-ml-xl"
+          :glossy="currentPage === '/equipes'"
+          to="/equipes"
+          v-if="game"
+          icon="fas fa-users"
+          aria-label="Équipes"
+          color="white"
+          size="lg">
+          <q-badge
+            floating
+            color="indigo"
+            class="q-mt-sm">
+            {{ teamsCount }}
+          </q-badge>
+        </q-btn>
+        <q-btn
+          flat
+          v-if="game"
+          v-show="currentPage === '/equipes'"
+          icon="fas fa-user-friends"
+          label="Nouvelle équipe"
+          aria-label="Nouvelle équipe"
+          color="positive"
+          size="sm"
+          class="q-ml-sm q-mt-md"
+          :disabled="teamsCount >= game.numberOfTeams"
+          @click="emitGlobalEvent('addTeam')" />
+
+        <div v-if="game" class="q-ml-xl">
+          <q-btn
+            flat
+            round
+            :glossy="currentPage === '/manches/' + round.id"
+            icon="fas fa-dice"
+            aria-label="Manches"
+            color="white"
+            size="lg"
+            class="q-ml-sm"
+            v-for="(round, roundIndex) in rounds"
+            :key="round.id"
+            :to="'/manches/' + round.id">
+            <q-badge
+              floating
+              :color="currentPage === '/manches/' + round.id ? 'indigo' : 'grey-7'"
+              class="q-mt-sm">
+              {{ parseInt(roundIndex) + 1 }}
+            </q-badge>
+          </q-btn>
+        </div>
+
+        <q-btn
+          flat
+          @click.prevent="newRound()"
+          label="Nouvelle manche"
+          v-if="game && teamsCount >= 4"
+          icon="fas fa-dice-five"
+          aria-label="Manche"
+          color="indigo-3"
+          size="sm"
+          class="q-ml-sm q-mt-md" />
+      </q-toolbar>
+
+      <q-toolbar :class="'q-pr-lg ' + (hiddenHeader ? 'col-12' : 'navbar-top col-4 q-py-sm')">
+        <q-space />
+
+        <q-btn
+          flat
+          color="white"
+          round
+          v-if="!hiddenHeader"
+          @click="$q.fullscreen.toggle()"
+          :icon="$q.fullscreen.isActive
+            ? 'fas fa-compress-arrows-alt'
+            : 'fas fa-expand-arrows-alt'" />
+
+        <q-btn
+          round
+          :class="'q-ml-md ' + (hiddenHeader ? 'q-mt-md' : '')"
+          :color="hiddenHeader ? 'dark' : 'white'"
+          :flat="!hiddenHeader"
+          :glossy="hiddenHeader"
+          :icon="!hiddenHeader
+            ? 'fas fa-chevron-up'
+            : 'fas fa-chevron-down'"
+          @click="hiddenHeader = !hiddenHeader" />
+
+      </q-toolbar>
+
+    </div>
+  </div>
+
+  <q-page-container v-cloak>
+    <router-view :key="$route.fullPath" />
+  </q-page-container>
+</q-layout>

@@ -1,0 +1,105 @@
+<q-card flat bordered class="col-3 col-sm-4 col-xs-6 bg-indigo ">
+  <q-card-section class="text-white text-h6">
+    {{ team.id ? team.name : 'Nouvelle équipe' }}
+  </q-card-section>
+  <q-card-section class="bg-white">
+    <q-list class="q-col-gutter-md row items-start">
+        <q-item
+          dense
+          class="col-3 q-my-xs q-pb-md"
+          v-for="(avatar, index) in avatars"
+          :key="index"
+          clickable
+          v-ripple
+          :disable="isAvatarFree(avatar)"
+          :active="team.avatar === avatar"
+          active-class="bg-blue-2"
+          @click="selectAvatar(avatar)">
+          <q-item-section>
+            <q-img contain :src="`statics/avatars/${avatar}`" style="height: 50px;" />
+          </q-item-section>
+        </q-item>
+    </q-list>
+    <q-input
+      outlined
+      v-model="team.name"
+      label="Nom de l'équipe"
+      class="q-py-md"
+      ref="team-name"
+      :disable="team.avatar.length === 0"
+      @keyup.enter="addPlayer(0)">
+      <template v-slot:append>
+        <q-btn
+          flat
+          color="secondary"
+          icon="fas fa-user-plus"
+          @click="addPlayer(0)"
+          v-show="team.players.length == 0"
+          :disable="!team.name"
+        />
+      </template>
+    </q-input>
+    <div
+      v-for="(player, playerIndex) in team.players"
+      v-bind:key="playerIndex">
+      <q-input
+        dense
+        outlined
+        class="q-pb-md"
+        v-model="team.players[playerIndex].name"
+        v-bind:label="'Nom du joueur ' + (parseInt(playerIndex) + 1)"
+        v-bind:ref="'playerName' + playerIndex"
+        @keyup.enter="addPlayer(parseInt(playerIndex) + 1)"
+      >
+        <template v-slot:before>
+          <q-icon class="fas fa-user" size="xs" />
+        </template>
+        <template v-slot:append>
+          <q-btn
+            flat
+            color="secondary"
+            icon="fas fa-user-plus"
+            @click="addPlayer(parseInt(playerIndex) + 1)"
+            v-show="parseInt(playerIndex) + 1 == team.players.length
+              && team.players.length < maxPlayers"
+            :disable="!player.name"
+          />
+        </template>
+        <template v-slot:after>
+          <q-btn
+            @click="removePlayer(playerIndex)"
+            icon="fas fa-times"
+            color="negative"
+            size="sm"
+            flat
+          />
+        </template>
+      </q-input>
+    </div>
+  </q-card-section>
+  <q-card-actions class="bg-indigo-1" align="between">
+    <q-btn
+      flat
+      color="negative"
+      icon="fas fa-trash"
+      size="sm"
+      v-show="team.id"
+      @click="$emit('delete')"
+    />
+    <q-btn
+      flat
+      label="Annuler"
+      icon="fas fa-times"
+      color="grey-6"
+      @click="$emit('cancel')"
+    />
+    <q-btn
+      flat
+      color="primary"
+      :label="team.id ? 'Ok' : 'Créer'"
+      :icon="team.id ? 'fas fa-check' : 'fas fa-plus-square'"
+      :disable="team.players.length < minPlayers"
+      @click="$emit('save', team)"
+    />
+  </q-card-actions>
+</q-card>
