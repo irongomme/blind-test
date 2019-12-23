@@ -26,7 +26,7 @@
       :src="`statics/avatars/${match.team.avatar}`" />
   </div>
 
-  <q-card-actions align="between" v-show="!match.is_closed">
+  <q-card-actions align="between" v-show="!match.match.is_closed">
     <q-btn
       flat
       v-ripple
@@ -44,7 +44,7 @@
       @click="$emit('updateScore', match, match.score + 1)" />
   </q-card-actions>
 
-  <q-card-section class="text-h6 text-center text-white" v-show="match.is_closed">
+  <q-card-section class="text-h6 text-center text-white" v-show="match.match.is_closed">
     Match terminé !
   </q-card-section>
 

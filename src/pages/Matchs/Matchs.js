@@ -58,11 +58,11 @@ export default {
         },
       });
     },
-    switchMatch(matchId, matchState) {
+    switchMatch() {
       Match.update({
-        where: matchId,
+        where: this.currentMatch.id,
         data: {
-          is_closed: !matchState,
+          is_closed: !this.currentMatch.is_closed,
         },
       });
     },
@@ -105,7 +105,7 @@ export default {
           is_closed: matchs[matchInc].is_closed,
           matchTeams: MatchTeam.query()
             .where('match_id', matchs[matchInc].id)
-            .with('team')
+            .with('team|match')
             .all(),
         });
       }
