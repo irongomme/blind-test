@@ -1,8 +1,7 @@
 export default {
   name: 'TeamListCard',
   props: {
-    team: Object,
-    matchTeam: Object,
+    match: Object,
     star: Boolean,
     lastScored: Boolean,
     color: {

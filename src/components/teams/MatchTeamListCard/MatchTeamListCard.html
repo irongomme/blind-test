@@ -1,6 +1,6 @@
 <q-card flat bordered :class="'bg-' + color" v-cloak>
   <q-card-section class="text-white text-bold text-center text-h4">
-    {{ team.name }}
+    {{ match.team.name }}
   </q-card-section>
 
   <q-card-section class="text-white text-bold">
@@ -10,7 +10,7 @@
       </div>
       <div class="col-4 text-center">
         <q-chip size="xl" class="bg-white">
-          {{ matchTeam.score }} points
+          {{ match.score }} points
         </q-chip>
       </div>
       <div class="col-4 text-right">
@@ -23,28 +23,28 @@
     <q-img
       style="height: 300px;"
       contain
-      :src="`statics/avatars/${team.avatar}`" />
+      :src="`statics/avatars/${match.team.avatar}`" />
   </div>
 
-  <q-card-actions align="between" v-show="!matchTeam.match.is_closed">
+  <q-card-actions align="between" v-show="!match.is_closed">
     <q-btn
       flat
       v-ripple
       color="white"
       icon="fas fa-undo"
       size="lg"
-      @click="$emit('updateScore', matchTeam.match_id, team.id, matchTeam.score - 1)"
-      :disabled="matchTeam.score <= 0" />
+      @click="$emit('updateScore', match, match.score - 1)"
+      :disabled="match.score <= 0" />
     <q-btn
       flat
       v-ripple
       color="white"
       icon="fas fa-thumbs-up"
       size="lg"
-      @click="$emit('updateScore', matchTeam.match_id, team.id, matchTeam.score + 1)" />
+      @click="$emit('updateScore', match, match.score + 1)" />
   </q-card-actions>
 
-  <q-card-section class="text-h6 text-center text-white" v-show="matchTeam.match.is_closed">
+  <q-card-section class="text-h6 text-center text-white" v-show="match.is_closed">
     Match terminé !
   </q-card-section>
 

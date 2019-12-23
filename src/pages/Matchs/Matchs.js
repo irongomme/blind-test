@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import MatchTeamListCard from '@components/teams/MatchTeamListCard';
-import Round from '@models/round.model';
 import Match from '@models/match.model';
 import MatchTeam from '@models/match.team.model';
 import AnimatedSuccess from '@json/animated_success.json';
@@ -31,17 +30,10 @@ export default {
     next();
   },
   methods: {
-    updateScore(matchId, teamId, score) {
+    updateScore(matchTeam, score) {
       if (score < 0) {
         return;
       }
-
-      const matchTeam = MatchTeam
-        .query()
-        .where('match_id', matchId)
-        .where('team_id', teamId)
-        .with('team')
-        .first();
 
       // Gain de score
       if (score > matchTeam.score) {
@@ -60,8 +52,8 @@ export default {
       MatchTeam.update({
         where: matchTeam.id,
         data: {
-          match_id: matchId,
-          team_id: teamId,
+          match_id: matchTeam.match_id,
+          team_id: matchTeam.team_id,
           score,
         },
       });
@@ -91,7 +83,7 @@ export default {
     },
     getTeamColorIndex(teamId) {
       return _.indexOf(
-        this.currentMatch.map(matchTeam => matchTeam.team_id),
+        this.currentMatch.matchTeams.map(matchTeam => matchTeam.team_id),
         teamId,
       );
     },
@@ -100,67 +92,47 @@ export default {
     },
   },
   computed: {
-    currentRound() {
-      const roundMatchs = Round.query()
-        .whereId(this.$route.params.round_id)
-        .with('matchs')
-        .first();
+    matchs() {
+      const currentMatchs = [];
 
+      const matchs = Match.query()
+        .where('round_id', this.$route.params.round_id)
+        .all();
 
-      if (!roundMatchs) {
-        return [];
+      for (let matchInc = 0; matchInc < matchs.length; matchInc += 1) {
+        currentMatchs.push({
+          id: matchs[matchInc].id,
+          is_closed: matchs[matchInc].is_closed,
+          matchTeams: MatchTeam.query()
+            .where('match_id', matchs[matchInc].id)
+            .with('team')
+            .all(),
+        });
       }
 
-      const currentRoundMatchs = [];
-
-      for (let matchInc = 0; matchInc < roundMatchs.matchs.length; matchInc += 1) {
-        const currentMatchTeams = MatchTeam.query()
-          .where('match_id', roundMatchs.matchs[matchInc].id)
-          .with('match')
-          .with('team.players')
-          .all();
-
-        currentRoundMatchs.push(currentMatchTeams);
-      }
-
-      return currentRoundMatchs;
+      return currentMatchs;
     },
     isRoundClosed() {
-      const reducer = (compute, value) => compute && value[0].match.is_closed;
-      return this.currentRound.reduce(reducer, true);
+      const reducer = (compute, value) => compute && value.is_closed;
+      return this.matchs.reduce(reducer, true);
     },
     currentMatch() {
-      return this.currentRound[this.matchTab];
+      return this.matchs[this.matchTab];
     },
     lastScored() {
       return this.scoreHistory[this.scoreHistory.length - 1];
     },
     bestMatchTeam() {
-      let bestScore = 0;
-      let bestMatchTeam = [];
+      const scores = this.currentMatch.matchTeams.map(matchTeam => matchTeam.score);
+      const bestScore = Math.max(...scores);
 
-      for (let teamInc = 0; teamInc < this.currentMatch.length; teamInc += 1) {
-        const teamScore = this.currentMatch[teamInc].score;
-        const matchTeamId = this.currentMatch[teamInc].id;
-
-        if (teamScore > bestScore) {
-          bestScore = teamScore;
-          bestMatchTeam = [matchTeamId];
-        } else if (teamScore > 0 && teamScore === bestScore) {
-          bestMatchTeam.push(matchTeamId);
-        }
-      }
-
-      return bestMatchTeam;
+      return this.currentMatch.matchTeams
+        .filter(matchTeam => matchTeam.score > 0 && matchTeam.score === bestScore)
+        .map(matchTeam => matchTeam.id);
     },
     allScoresCount() {
-      let count = 0;
-
-      for (let teamInc = 0; teamInc < this.currentMatch.length; teamInc += 1) {
-        count += this.currentMatch[teamInc].score;
-      }
-
-      return count;
+      const reducer = (compute, value) => compute + value.score;
+      return this.currentMatch.matchTeams.reduce(reducer, 0);
     },
     animatedSucess: () => AnimatedSuccess,
   },
