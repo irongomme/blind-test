@@ -11,6 +11,7 @@ export default class MatchTeam extends Model {
       id: this.uid(() => uid()),
       match_id: this.attr(null),
       team_id: this.attr(null),
+      color: this.attr(null),
       score: this.attr(0),
       match: this.belongsTo(Match, 'match_id'),
       team: this.belongsTo(Team, 'team_id'),

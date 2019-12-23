@@ -33,7 +33,7 @@
       color="white"
       icon="fas fa-undo"
       size="lg"
-      @click="$emit('updateScore', match, match.score - 1)"
+      @click.prevent="$emit('updateScore', match, match.score - 1)"
       :disabled="match.score <= 0" />
     <q-btn
       flat
@@ -41,7 +41,7 @@
       color="white"
       icon="fas fa-thumbs-up"
       size="lg"
-      @click="$emit('updateScore', match, match.score + 1)" />
+      @click.prevent="$emit('updateScore', match, match.score + 1)" />
   </q-card-actions>
 
   <q-card-section class="text-h6 text-center text-white" v-show="match.match.is_closed">

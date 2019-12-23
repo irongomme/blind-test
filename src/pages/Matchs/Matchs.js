@@ -10,14 +10,9 @@ export default {
   data() {
     return {
       matchTab: 0,
-      matchColors: [
-        'blue-9',
-        'yellow-8',
-        'green',
-        'red-9',
-      ],
       scoreHistory: [],
       teamSuccessPopup: false,
+      closeMatchPopup: false,
       successTeamColor: '',
       successTeamName: '',
       successImage: '',
@@ -40,7 +35,7 @@ export default {
         // Ajout du point dans l'historique
         this.scoreHistory.push(matchTeam.id);
         // Noticiation
-        this.showSuccess(matchTeam.team);
+        this.showSuccess(matchTeam);
       // Correction de point
       } else if (score < matchTeam.score) {
         // Recherche du dernier point attribué à l'équipe
@@ -58,6 +53,10 @@ export default {
         },
       });
     },
+    nextMatch() {
+      this.switchMatch();
+      this.$refs.matchTabs.next();
+    },
     switchMatch() {
       Match.update({
         where: this.currentMatch.id,
@@ -66,14 +65,14 @@ export default {
         },
       });
     },
-    showSuccess(team) {
+    showSuccess(matchTeam) {
       // Attribution des differentes valeurs pour la popup
       this.successImage = '/statics/success/';
       this.successImage += this.animatedSucess[
         Math.floor(Math.random() * Math.floor(this.animatedSucess.length))
       ];
-      this.successTeamColor = this.matchColors[this.getTeamColorIndex(team.id)];
-      this.successTeamName = team.name;
+      this.successTeamColor = matchTeam.color;
+      this.successTeamName = matchTeam.team.name;
       // Ouverture
       this.teamSuccessPopup = true;
       // Timer
@@ -81,17 +80,12 @@ export default {
         this.teamSuccessPopup = false;
       }, 8000);
     },
-    getTeamColorIndex(teamId) {
-      return _.indexOf(
-        this.currentMatch.matchTeams.map(matchTeam => matchTeam.team_id),
-        teamId,
-      );
-    },
     isInBestMatchTeam(matchTeamId) {
       return _.indexOf(this.bestMatchTeam, matchTeamId) !== -1;
     },
   },
   computed: {
+    animatedSucess: () => AnimatedSuccess,
     matchs() {
       const currentMatchs = [];
 
@@ -112,15 +106,15 @@ export default {
 
       return currentMatchs;
     },
-    isRoundClosed() {
-      const reducer = (compute, value) => compute && value.is_closed;
-      return this.matchs.reduce(reducer, true);
-    },
     currentMatch() {
       return this.matchs[this.matchTab];
     },
     lastScored() {
       return this.scoreHistory[this.scoreHistory.length - 1];
+    },
+    allScoresCount() {
+      const reducer = (compute, value) => compute + value.score;
+      return this.currentMatch.matchTeams.reduce(reducer, 0);
     },
     bestMatchTeam() {
       const scores = this.currentMatch.matchTeams.map(matchTeam => matchTeam.score);
@@ -130,10 +124,12 @@ export default {
         .filter(matchTeam => matchTeam.score > 0 && matchTeam.score === bestScore)
         .map(matchTeam => matchTeam.id);
     },
-    allScoresCount() {
-      const reducer = (compute, value) => compute + value.score;
-      return this.currentMatch.matchTeams.reduce(reducer, 0);
+    matchTeamsRanking() {
+      return _.sortBy(this.currentMatch.matchTeams, ['score']).reverse();
     },
-    animatedSucess: () => AnimatedSuccess,
+    isRoundClosed() {
+      const reducer = (compute, value) => compute && value.is_closed;
+      return this.matchs.reduce(reducer, true);
+    },
   },
 };

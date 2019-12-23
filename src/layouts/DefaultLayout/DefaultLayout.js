@@ -11,6 +11,12 @@ export default {
   data() {
     return {
       hiddenHeader: false,
+      matchColors: [
+        'blue-9',
+        'yellow-8',
+        'green',
+        'red-9',
+      ],
     };
   },
   created() {
@@ -47,6 +53,7 @@ export default {
             data: {
               match_id: newMatch.id,
               team_id: currentTeam.id,
+              color: this.matchColors[teamInc],
             },
           });
         }

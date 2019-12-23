@@ -18,7 +18,7 @@
                 :key="matchTeamItem.team.id">
                 <MatchTeamListCard
                   :match="matchTeamItem"
-                  :color="matchColors[teamIndex]"
+                  :color="matchTeamItem.color"
                   :star="isInBestMatchTeam(matchTeamItem.id)"
                   :lastScored="lastScored === matchTeamItem.id"
                   @updateScore="updateScore" />
@@ -49,7 +49,7 @@
                   icon="fas fa-power-off"
                   size="xl"
                   class="q-mx-sm"
-                  @click="switchMatch()" />
+                  @click="closeMatchPopup = !closeMatchPopup ? true : false" />
               </div>
               <div class="col-4 text-right">
                 <q-btn
@@ -79,7 +79,7 @@
   <q-dialog
     ref="dialog-success"
     maximized
-    persistent
+    auto-close
     v-model="teamSuccessPopup"
     transition-show="fade"
     transition-hide="fade">
@@ -101,4 +101,78 @@
       </q-card-section>
     </q-card>
   </q-dialog>
+
+  <q-dialog
+    ref="dialog-close-match"
+    persistent
+    v-model="closeMatchPopup"
+    transition-show="slide-down"
+    transition-hide="fade">
+    <q-card style="width: 900px;">
+      <q-card-section class="text-h6 bg-indigo text-white">
+        Résultats du Match
+      </q-card-section>
+      <q-card-section>
+        <div class="q-pa-md">
+          <q-list separator>
+            <q-item
+              v-for="(matchTeam, index) in matchTeamsRanking"
+              :key="matchTeam.id">
+             <q-item-section>
+                <q-avatar rounded>
+                  <q-img cover :src="`statics/avatars/${matchTeam.team.avatar}`" />
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-linear-progress
+                  stripe
+                  rounded
+                  style="height: 40px"
+                  :value="(matchTeam.score / allScoresCount)"
+                  color="positive"
+                  class="q-mt-sm">
+                  <div class="absolute-full flex flex-center">
+
+                  </div>
+                </q-linear-progress>
+              </q-item-section>
+              <q-item-section >
+                <q-badge
+                    class="text-bold text-body2 "
+                    align="middle"
+                    :color="matchTeam.color"
+                    text-color="white"
+                    :label="matchTeam.score + ' Point' + (matchTeam.score > 1 ? 's' : '' )" />
+              </q-item-section>
+
+              <q-item-section :class="'text-h6 text-' + matchTeam.color">
+                {{ matchTeam.team.name }}
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+      </q-card-section>
+      <q-separator />
+      <q-card-actions align="between">
+        <q-btn
+          flat
+          v-ripple
+          color="grey"
+          icon="fas fa-times"
+          label="Annuler"
+          size="lg"
+          v-close-popup />
+        <q-btn
+          flat
+          v-ripple
+          icon-right="fas fa-arrow-right"
+          label="Match suivant"
+          color="indigo"
+          size="lg"
+          @click="nextMatch()"
+          v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
 </q-page>
