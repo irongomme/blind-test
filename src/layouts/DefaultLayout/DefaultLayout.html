@@ -65,16 +65,6 @@
           </q-btn>
         </div>
 
-        <q-btn
-          flat
-          @click.prevent="newRound()"
-          label="Nouvelle manche"
-          v-if="game && teamsCount >= 4"
-          icon="fas fa-dice-five"
-          aria-label="Manche"
-          color="indigo-3"
-          size="sm"
-          class="q-ml-sm q-mt-md" />
       </q-toolbar>
 
       <q-toolbar :class="'q-pr-lg ' + (hiddenHeader ? 'col-12' : 'navbar-top col-4 q-py-sm')">

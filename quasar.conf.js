@@ -123,6 +123,7 @@ module.exports = function (ctx) {
           '@components': path.resolve(__dirname, './src/components'),
           '@json': path.resolve(__dirname, './src/json'),
           '@layout': path.resolve(__dirname, './src/layout'),
+          '@mixins': path.resolve(__dirname, './src/mixins'),
           '@models': path.resolve(__dirname, './src/models'),
           '@pages': path.resolve(__dirname, './src/pages'),
           '@statics': path.resolve(__dirname, './src/statics'),
