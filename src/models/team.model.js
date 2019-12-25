@@ -10,6 +10,7 @@ export default class Team extends Model {
       id: this.uid(() => uid()),
       name: this.attr(''),
       avatar: this.attr(''),
+      is_active: this.attr(true),
       players: this.hasMany(Player, 'team_id'),
     };
   }

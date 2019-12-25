@@ -1,21 +1,36 @@
 import _ from 'lodash';
 import MatchTeamListCard from '@components/matchs/MatchTeamListCard';
+import DialogMatchSummary from '@components/matchs/DialogMatchSummary';
+import DialogRoundSummary from '@components/rounds/DialogRoundSummary';
 import Match from '@models/match.model';
 import MatchTeam from '@models/match.team.model';
 import AnimatedSuccess from '@json/animated_success.json';
 
 export default {
   name: 'PageMatchs',
-  components: { MatchTeamListCard },
+  components: {
+    MatchTeamListCard,
+    DialogMatchSummary,
+    DialogRoundSummary,
+  },
   data() {
     return {
       matchTab: 0,
       scoreHistory: [],
       teamSuccessPopup: false,
-      closeMatchPopup: false,
+      matchSummaryPopup: false,
+      roundSummaryPopup: false,
       successTeamColor: '',
       successTeamName: '',
       successImage: '',
+      wordNumbers: [
+        'one',
+        'two',
+        'three',
+        'four',
+        'five',
+        'six',
+      ],
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -53,23 +68,34 @@ export default {
         },
       });
     },
-    nextMatch() {
-      this.switchMatch();
-      this.$refs.matchTabs.next();
-    },
-    switchMatch() {
-      Match.update({
+    closeMatch() {
+      return Match.update({
         where: this.currentMatch.id,
         data: {
-          is_closed: !this.currentMatch.is_closed,
+          is_closed: true,
         },
       });
+    },
+    nextMatch() {
+      if (!this.currentMatch.is_closed && this.matchSummaryPopup === false) {
+        this.matchSummaryPopup = true;
+      } else {
+        this.closeMatch().then(() => {
+          setTimeout(() => {
+            if (this.isRoundClosed && this.matchTab === (this.matchs.length - 1)) {
+              this.roundSummaryPopup = true;
+            } else {
+              this.$refs.matchTabs.next();
+            }
+          }, 400);
+        });
+      }
     },
     showSuccess(matchTeam) {
       // Attribution des differentes valeurs pour la popup
       this.successImage = '/statics/success/';
       this.successImage += this.animatedSucess[
-        Math.floor(Math.random() * Math.floor(this.animatedSucess.length))
+        Math.floor(Math.random() * this.animatedSucess.length)
       ];
       this.successTeamColor = matchTeam.color;
       this.successTeamName = matchTeam.team.name;
@@ -82,6 +108,11 @@ export default {
     },
     isInBestMatchTeam(matchTeamId) {
       return _.indexOf(this.bestMatchTeam, matchTeamId) !== -1;
+    },
+    showRoundSummary() {
+      this.closeMatch().then(() => {
+        this.roundSummaryPopup = true;
+      });
     },
   },
   computed: {
@@ -126,6 +157,21 @@ export default {
     },
     matchTeamsRanking() {
       return _.sortBy(this.currentMatch.matchTeams, ['score']).reverse();
+    },
+    bestMatchScore() {
+      const scores = this.matchTeamsRanking.map(matchTeam => matchTeam.score);
+      return Math.max(...scores);
+    },
+    roundTeamsRanking() {
+      const teamsRanking = MatchTeam.query()
+        .with('team')
+        .with('match')
+        .whereHas('match', (query) => {
+          query.where('round_id', this.$route.params.round_id);
+        })
+        .all();
+
+      return _.sortBy(teamsRanking, ['score']).reverse();
     },
     isRoundClosed() {
       const reducer = (compute, value) => compute && value.is_closed;

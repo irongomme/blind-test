@@ -32,7 +32,7 @@
         </q-btn>
         <q-btn
           flat
-          v-if="game"
+          v-if="game && teamsCount < game.numberOfTeams"
           v-show="currentPage === '/equipes'"
           icon="fas fa-user-friends"
           label="Nouvelle équipe"
@@ -40,10 +40,22 @@
           color="positive"
           size="sm"
           class="q-ml-sm q-mt-md"
-          :disabled="teamsCount >= game.numberOfTeams"
           @click="emitGlobalEvent('addTeam')" />
 
-        <div v-if="game" class="q-ml-xl">
+        <div v-if="game && rounds.length === 0" class="q-ml-xl">
+          <q-btn
+            flat
+            round
+            icon="fas fa-dice"
+            aria-label="Manches"
+            color="white"
+            size="lg"
+            class="q-ml-sm"
+            @click.prevent="newRound()">
+          </q-btn>
+        </div>
+
+        <div v-if="game && rounds.length > 0" class="q-ml-xl">
           <q-btn
             flat
             round

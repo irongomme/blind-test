@@ -2,11 +2,10 @@
   <div class="full-width" v-if="matchs">
     <div class="q-gutter-y-md" style="padding-top: 72px;">
 
-      <q-card bordered>
+      <q-card bordered class="q-py-lg">
         <q-tab-panels
           v-model="matchTab"
           ref="matchTabs"
-          keep-alive
           animated>
           <q-tab-panel
             :name="matchIndex"
@@ -26,55 +25,59 @@
             </div>
           </q-tab-panel>
         </q-tab-panels>
-
-        <q-card-section>
-          <q-toolbar class="q-pt-lg">
-            <div class="row full-width">
-              <div class="col-4 text-left">
-                <q-btn
-                  flat
-                  round
-                  color="indigo"
-                  icon="fas fa-backward"
-                  size="xl"
-                  class="q-mr-sm"
-                  :disable="!currentMatch.is_closed || matchTab === 0"
-                  @click="$refs.matchTabs.previous()" />
-              </div>
-              <div class="col-4 text-center">
-                <q-btn
-                  flat
-                  round
-                  :color="currentMatch.is_closed ? 'positive' : 'negative'"
-                  icon="fas fa-power-off"
-                  size="xl"
-                  class="q-mx-sm"
-                  @click="closeMatchPopup = !closeMatchPopup ? true : false" />
-              </div>
-              <div class="col-4 text-right">
-                <q-btn
-                  flat
-                  round
-                  color="indigo"
-                  icon="fas fa-forward"
-                  size="xl"
-                  class="q-ml-sm"
-                  :disable="!currentMatch.is_closed || matchTab === (matchs.length - 1)"
-                  @click="$refs.matchTabs.next()" />
-              </div>
-            </div>
-          </q-toolbar>
-        </q-card-section>
-        <q-separator />
-        <q-card-section class="bg-grey-3">
-          <p class="text-center q-pt-md">
-            {{ allScoresCount }} chansons jouées dans ce match
-          </p>
-        </q-card-section>
       </q-card>
 
     </div>
   </div>
+
+  <q-footer>
+    <div class="row full-width navbar-bottom q-py-sm">
+      <div class="col-4 text-left">
+        <q-btn
+          flat
+          round
+          color="white"
+          icon="fas fa-backward"
+          size="xl"
+          class="q-ml-md"
+          v-show="isRoundClosed && matchTab !== 0"
+          @click="$refs.matchTabs.previous()" />
+      </div>
+      <div class="col-2 text-right q-pt-md q-pr-md text-h4">
+        <q-icon color="blue-4" name="fas fa-music" class="q-ml-sm">
+          <q-badge
+            floating
+            color="white"
+            text-color="dark"
+            class="text-bold q-ml-xs q-mb-md">
+            {{ allScoresCount }}
+          </q-badge>
+        </q-icon>
+      </div>
+      <div class="col-2 text-left q-pt-md q-pl-md text-h4">
+        <q-icon
+          :name="'fas fa-dice-' + wordNumbers[matchTab]"
+          class="q-ml-md text-blue-4" />
+      </div>
+      <div class="col-4 text-right">
+        <q-btn flat round v-close-popup
+          color="white"
+          icon="fas fa-forward"
+          size="xl"
+          class="q-mr-md"
+          :disable="matchSummaryPopup"
+          @click="nextMatch()"
+          v-show="matchTab !== (currentMatch.matchTeams.length - 1) || !currentMatch.is_closed" />
+        <q-btn flat round
+          icon="fas fa-trophy"
+          color="white"
+          size="xl"
+          class="q-mr-md"
+          @click="showRoundSummary()"
+          v-show="matchTab === (currentMatch.matchTeams.length - 1) && currentMatch.is_closed" />
+      </div>
+    </div>
+  </q-footer>
 
   <q-dialog
     ref="dialog-success"
@@ -102,77 +105,13 @@
     </q-card>
   </q-dialog>
 
-  <q-dialog
-    ref="dialog-close-match"
-    persistent
-    v-model="closeMatchPopup"
-    transition-show="slide-down"
-    transition-hide="fade">
-    <q-card style="width: 900px;">
-      <q-card-section class="text-h6 bg-indigo text-white">
-        Résultats du Match
-      </q-card-section>
-      <q-card-section>
-        <div class="q-pa-md">
-          <q-list separator>
-            <q-item
-              v-for="(matchTeam, index) in matchTeamsRanking"
-              :key="matchTeam.id">
-             <q-item-section>
-                <q-avatar rounded>
-                  <q-img cover :src="`statics/avatars/${matchTeam.team.avatar}`" />
-                </q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-linear-progress
-                  stripe
-                  rounded
-                  style="height: 40px"
-                  :value="(matchTeam.score / allScoresCount)"
-                  color="positive"
-                  class="q-mt-sm">
-                  <div class="absolute-full flex flex-center">
+  <DialogMatchSummary
+    v-model="matchSummaryPopup"
+    :teamsRanking="matchTeamsRanking"
+    @next-match="nextMatch()" />
 
-                  </div>
-                </q-linear-progress>
-              </q-item-section>
-              <q-item-section >
-                <q-badge
-                    class="text-bold text-body2 "
-                    align="middle"
-                    :color="matchTeam.color"
-                    text-color="white"
-                    :label="matchTeam.score + ' Point' + (matchTeam.score > 1 ? 's' : '' )" />
-              </q-item-section>
-
-              <q-item-section :class="'text-h6 text-' + matchTeam.color">
-                {{ matchTeam.team.name }}
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-      </q-card-section>
-      <q-separator />
-      <q-card-actions align="between">
-        <q-btn
-          flat
-          v-ripple
-          color="grey"
-          icon="fas fa-times"
-          label="Annuler"
-          size="lg"
-          v-close-popup />
-        <q-btn
-          flat
-          v-ripple
-          icon-right="fas fa-arrow-right"
-          label="Match suivant"
-          color="indigo"
-          size="lg"
-          @click="nextMatch()"
-          v-close-popup />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+  <DialogRoundSummary
+    v-model="roundSummaryPopup"
+    :teamsRanking="roundTeamsRanking" />
 
 </q-page>
