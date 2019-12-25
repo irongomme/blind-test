@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import MatchTeamListCard from '@components/teams/MatchTeamListCard';
+import MatchTeamListCard from '@components/matchs/MatchTeamListCard';
 import Match from '@models/match.model';
 import MatchTeam from '@models/match.team.model';
 import AnimatedSuccess from '@json/animated_success.json';
