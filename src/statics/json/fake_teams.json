@@ -1,7 +1,7 @@
 [
   {
     "name": "Warriors",
-    "avatar": "monster1.svg",
+    "avatar": "monster1.png",
     "players": [
       {
         "name": "Polly Perkins"
@@ -19,7 +19,7 @@
   },
   {
     "name": "Blond",
-    "avatar": "monster2.svg",
+    "avatar": "monster2.png",
     "players": [
       {
         "name": "Sabrina Mosley"
@@ -37,7 +37,7 @@
   },
   {
     "name": "Snooty",
-    "avatar": "monster3.svg",
+    "avatar": "monster3.png",
     "players": [
       {
         "name": "Libby Alvarado"
@@ -55,7 +55,7 @@
   },
   {
     "name": "Dirty",
-    "avatar": "monster4.svg",
+    "avatar": "monster4.png",
     "players": [
       {
         "name": "Iqra Jacobson"
@@ -73,7 +73,7 @@
   },
   {
     "name": "Spiteful",
-    "avatar": "monster5.svg",
+    "avatar": "monster5.png",
     "players": [
       {
         "name": "Ida Richmond"
@@ -91,7 +91,7 @@
   },
   {
     "name": "Spiders",
-    "avatar": "monster6.svg",
+    "avatar": "monster6.png",
     "players": [
       {
         "name": "Rosa Duke"
@@ -109,7 +109,7 @@
   },
   {
     "name": "Lizards",
-    "avatar": "monster7.svg",
+    "avatar": "monster7.png",
     "players": [
       {
         "name": "Orla Santiago"
@@ -127,7 +127,7 @@
   },
   {
     "name": "Badgers",
-    "avatar": "monster8.svg",
+    "avatar": "monster8.png",
     "players": [
       {
         "name": "Caitlin Fields"
@@ -145,7 +145,7 @@
   },
   {
     "name": "Independents",
-    "avatar": "monster9.svg",
+    "avatar": "monster9.png",
     "players": [
       {
         "name": "Sinead Newman"
@@ -163,7 +163,7 @@
   },
   {
     "name": "United",
-    "avatar": "monster10.svg",
+    "avatar": "monster10.png",
     "players": [
       {
         "name": "Jennifer Higgins"
@@ -181,7 +181,7 @@
   },
   {
     "name": "Athletic",
-    "avatar": "monster11.svg",
+    "avatar": "monster11.png",
     "players": [
       {
         "name": "Isabelle Quinn"
@@ -199,7 +199,7 @@
   },
   {
     "name": "Tight-fisted",
-    "avatar": "monster12.svg",
+    "avatar": "monster12.png",
     "players": [
       {
         "name": "Annie Knowles"
@@ -217,7 +217,7 @@
   },
   {
     "name": "Sticky",
-    "avatar": "monster13.svg",
+    "avatar": "monster13.png",
     "players": [
       {
         "name": "Fatima Rodriguez"
@@ -235,7 +235,7 @@
   },
   {
     "name": "Frogs",
-    "avatar": "monster14.svg",
+    "avatar": "monster14.png",
     "players": [
       {
         "name": "Felix Huff"
@@ -253,7 +253,7 @@
   },
   {
     "name": "Hippos",
-    "avatar": "monster15.svg",
+    "avatar": "monster15.png",
     "players": [
       {
         "name": "Roxanne Brennan"
@@ -271,7 +271,7 @@
   },
   {
     "name": "Mariners",
-    "avatar": "monster16.svg",
+    "avatar": "monster16.png",
     "players": [
       {
         "name": "Martha Nelson"
