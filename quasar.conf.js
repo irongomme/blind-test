@@ -51,7 +51,6 @@ module.exports = function (ctx) {
         'QCard',
         'QCardActions',
         'QCardSection',
-        'QCarousel',
         'QChip',
         'QDialog',
         'QDrawer',
@@ -79,6 +78,7 @@ module.exports = function (ctx) {
         'QToggle',
         'QToolbar',
         'QToolbarTitle',
+        'QTooltip',
       ],
 
       directives: [

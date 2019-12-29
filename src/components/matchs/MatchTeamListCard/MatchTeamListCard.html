@@ -6,7 +6,17 @@
   <q-card-section class="text-white text-bold">
     <div class="row q-pt-md">
       <div class="col-4 text-left">
-        <q-icon class="text-white q-mr-md q-mt-sm" name="fas fa-hamburger" size="md" v-if="lastScored" />
+        <q-icon class="text-white q-mr-md q-mt-sm" name="fas fa-hamburger" size="md" v-if="lastScored">
+          <q-tooltip
+            anchor="center right"
+            self="center left"
+            :offset="[10, 22]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Dernier point marqué
+          </q-tooltip>
+        </q-icon>
       </div>
       <div class="col-4 text-center">
         <q-chip size="xl" class="bg-white">
@@ -14,7 +24,17 @@
         </q-chip>
       </div>
       <div class="col-4 text-right">
-        <q-icon class="text-white q-mr-md q-mt-sm" name="fas fa-medal" size="md" v-if="star" />
+        <q-icon class="text-white q-mr-md q-mt-sm" name="fas fa-medal" size="md" v-if="star">
+          <q-tooltip
+            anchor="center left"
+            self="center right"
+            :offset="[10, 22]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Meilleur score
+          </q-tooltip>
+        </q-icon>
       </div>
     </div>
   </q-card-section>
@@ -23,7 +43,8 @@
     <q-img
       style="height: 300px;"
       contain
-      :src="`statics/avatars/${match.team.avatar}`" />
+      :src="`statics/avatars/${match.team.avatar}`">
+    </q-img>
   </div>
 
   <q-card-actions align="between" v-show="!match.match.is_closed">

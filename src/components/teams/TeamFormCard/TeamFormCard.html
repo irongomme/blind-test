@@ -23,12 +23,14 @@
           animated>
           <q-tab-panel
             :name="tabIndex"
-            v-for="(avatarPage, tabIndex) in avatarsChunk">
+            v-for="(avatarPage, tabIndex) in avatarsChunk"
+            :key="tabIndex">
             <q-list class="q-col-gutter-md row items-start">
               <q-item
                 dense
                 class="col-3 q-my-xs q-pb-md"
-                v-for="avatar in avatarPage"
+                v-for="(avatar, avatarIndex) in avatarPage"
+                :key="avatarIndex"
                 clickable
                 v-ripple
                 :disable="isAvatarFree(avatar)"

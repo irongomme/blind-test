@@ -1,7 +1,6 @@
 <q-page padding class="flex flex-center q-pt-xl">
   <div class="full-width" v-if="matchs">
     <div class="q-gutter-y-md" style="padding-top: 72px;">
-
       <q-card bordered class="q-py-lg">
         <q-tab-panels
           v-model="matchTab"
@@ -10,7 +9,7 @@
           <q-tab-panel
             :name="matchIndex"
             v-for="(matchItem, matchIndex) in matchs" :key="'tab-panel' + matchIndex">
-            <div class="row q-col-gutter-md">
+            <div class="row q-col-gutter-md justify-around">
               <div
                 class="col-3 col-lg-3 col-sm-6"
                 v-for="(matchTeamItem, teamIndex) in matchs[matchIndex].matchTeams"
@@ -26,13 +25,12 @@
           </q-tab-panel>
         </q-tab-panels>
       </q-card>
-
     </div>
   </div>
 
   <q-footer>
     <div class="row full-width navbar-bottom q-py-sm">
-      <div class="col-4 text-left">
+      <div class="col-5 text-left">
         <q-btn
           flat
           round
@@ -41,28 +39,31 @@
           size="xl"
           class="q-ml-md"
           v-show="isRoundClosed && matchTab !== 0"
-          @click="$refs.matchTabs.previous()" />
+          @click="$refs.matchTabs.previous()">
+          <q-tooltip
+            anchor="center right"
+            self="center left"
+            :offset="[10, 10]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Consulter la rencontre précédente
+          </q-tooltip>
+        </q-btn>
       </div>
-      <!-- <div class="col-2 text-right q-pt-md q-pr-md text-h4">
-        <q-icon color="indigo-2" name="fas fa-music" class="q-ml-sm">
+      <div class="col-2 text-center q-pl-md text-h3 text-indigo-2">
+        <div class="bg-dark q-py-sm rounded-borders">
+          <q-icon :name="`fas fa-dice-${wordNumbers[matchTab]}`" class="q-ml-sm q-mr-sm" />
           <q-badge
-            floating
-            color="white"
-            text-color="dark"
-            class="text-bold q-ml-xs q-mb-md">
-            {{ allScoresCount }}
+            outline
+            color="indigo-2"
+            text-color="white"
+            align="middle">
+            <q-icon class="q-mr-xs" name="fas fa-music" /> {{ allScoresCount }}
           </q-badge>
-        </q-icon>
-      </div> -->
-      <div class="col-4 text-center q-pt-md q-pl-md text-h4">
-        <q-icon
-          name="fas fa-music"
-          class="q-ml-md text-indigo-2" />
-        <q-icon
-          :name="'fas fa-dice-' + wordNumbers[matchTab]"
-          class="q-ml-md text-indigo-2" />
+        </div>
       </div>
-      <div class="col-4 text-right">
+      <div class="col-5 text-right">
         <q-btn flat round v-close-popup
           color="white"
           icon="fas fa-forward"
@@ -70,14 +71,34 @@
           class="q-mr-md"
           :disable="matchSummaryPopup"
           @click="nextMatch()"
-          v-show="matchTab !== (currentMatch.matchTeams.length - 1) || !currentMatch.is_closed" />
+          v-show="matchTab !== (currentMatch.matchTeams.length - 1) || !currentMatch.is_closed">
+          <q-tooltip
+            anchor="center left"
+            self="center right"
+            :offset="[10, 10]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Passer à la rencontre suivante
+          </q-tooltip>
+        </q-btn>
         <q-btn flat round
           icon="fas fa-trophy"
           color="white"
           size="xl"
           class="q-mr-md"
           @click="showRoundSummary()"
-          v-show="matchTab === (currentMatch.matchTeams.length - 1) && currentMatch.is_closed" />
+          v-show="matchTab === (currentMatch.matchTeams.length - 1) && currentMatch.is_closed">
+          <q-tooltip
+            anchor="center left"
+            self="center right"
+            :offset="[10, 10]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Voir le compte rendu de la manche
+          </q-tooltip>
+        </q-btn>
       </div>
     </div>
   </q-footer>

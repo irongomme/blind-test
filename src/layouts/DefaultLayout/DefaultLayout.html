@@ -8,10 +8,19 @@
           :glossy="currentPage === '/'"
           to="/"
           icon="fas fa-meteor"
-          aria-label="Équipes"
+          aria-label="Écran d'accueil"
           color="white"
-          size="lg"
-        />
+          size="lg">
+          <q-tooltip
+            anchor="bottom left"
+            self="center left"
+            :offset="[0, 26]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Créer une nouvelle partie
+          </q-tooltip>
+        </q-btn>
         <q-btn
           flat
           round
@@ -29,6 +38,15 @@
             class="q-mt-sm">
             {{ teamsCount }}
           </q-badge>
+          <q-tooltip
+            anchor="bottom left"
+            self="center left"
+            :offset="[0, 26]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Gérer les équipes
+          </q-tooltip>
         </q-btn>
 
         <div
@@ -43,6 +61,15 @@
             size="lg"
             class="q-ml-sm"
             @click.prevent="newRound()">
+            <q-tooltip
+              anchor="bottom left"
+              self="center left"
+              :offset="[0, 26]"
+              content-style="font-size: 16px"
+              transition-show="scale"
+              transition-hide="scale">
+              Lancer une nouvelle manche
+            </q-tooltip>
           </q-btn>
         </div>
 
@@ -65,6 +92,15 @@
               class="q-mt-sm">
               {{ parseInt(roundIndex) + 1 }}
             </q-badge>
+            <q-tooltip
+              anchor="bottom left"
+              self="center left"
+              :offset="[0, 26]"
+              content-style="font-size: 16px"
+              transition-show="scale"
+              transition-hide="scale">
+              Écran de la {{ roundFrenchCounter[roundIndex] }} manche
+            </q-tooltip>
           </q-btn>
         </div>
 
@@ -81,7 +117,17 @@
           @click="$q.fullscreen.toggle()"
           :icon="$q.fullscreen.isActive
             ? 'fas fa-compress-arrows-alt'
-            : 'fas fa-expand-arrows-alt'" />
+            : 'fas fa-expand-arrows-alt'">
+          <q-tooltip
+            anchor="bottom left"
+            self="center right"
+            :offset="[-50, 36]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Passer en plein écran
+          </q-tooltip>
+        </q-btn>
 
         <q-btn
           round
@@ -92,7 +138,17 @@
           :icon="!hiddenHeader
             ? 'fas fa-chevron-up'
             : 'fas fa-chevron-down'"
-          @click="hiddenHeader = !hiddenHeader" />
+          @click="hiddenHeader = !hiddenHeader">
+          <q-tooltip
+            anchor="bottom left"
+            self="center right"
+            :offset="[-50, 36]"
+            content-style="font-size: 16px"
+            transition-show="scale"
+            transition-hide="scale">
+            Masquer la barre
+          </q-tooltip>
+        </q-btn>
 
       </q-toolbar>
 

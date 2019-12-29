@@ -10,6 +10,18 @@ export default {
   data() {
     return {
       hiddenHeader: false,
+      roundFrenchCounter: [
+        'première',
+        'deuxième',
+        'troisième',
+        'quatrième',
+        'cinquième',
+        'sixième',
+        'septième',
+        'huitième',
+        'neuvième',
+        'dixième',
+      ],
     };
   },
   created() {

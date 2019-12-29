@@ -11,7 +11,6 @@
         <div class="row">
           <div class="full-width">
             <q-list
-
               dense
               class="q-gutter-x-sm column"
               :style="{ height: (listItemHeight * (teamsRanking.length / 2)) + 'px' }">
@@ -66,7 +65,9 @@
         </div>
       </q-card-section>
       <q-separator v-if="roundId === lastRoundId" />
-      <q-card-section class="bg-indigo text-white" v-if="roundId === lastRoundId">
+      <q-card-section
+        class="bg-indigo text-white"
+        v-if="roundId === lastRoundId">
         <div class="row">
           <div class="col-9 text-right">
             <div class="q-gutter-sm">
@@ -115,7 +116,7 @@
           v-ripple
           color="indigo"
           icon="fas fa-dice"
-          label="Nouveau Round"
+          label="Nouvelle manche"
           @click="newRound({ cumulativeScores })"
           size="lg"
           v-if="!needSeparation"
