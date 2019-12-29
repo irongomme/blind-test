@@ -11,6 +11,12 @@ export default {
     minPlayers: Number,
     maxPlayers: Number,
   },
+  data() {
+    return {
+      avatarsPerTab: 8,
+      avatarTab: 0,
+    };
+  },
   methods: {
     addPlayer(playerIndex) {
       // Tant que le nombre max de joueurs n'est pas atteint
@@ -48,5 +54,8 @@ export default {
     game: () => Game.query().first(),
     teams: () => Team.query().all(),
     avatars: () => Avatars,
+    avatarsChunk() {
+      return _.chunk(this.avatars, this.avatarsPerTab);
+    },
   },
 };

@@ -1,9 +1,59 @@
 <q-card flat bordered class="col-3 col-sm-4 col-xs-6 bg-indigo ">
   <q-card-section class="text-white text-h6">
+    <q-avatar v-if="team.avatar">
+      <img :src="`statics/avatars/${team.avatar}`">
+    </q-avatar>
     {{ team.id ? team.name : 'Nouvelle équipe' }}
   </q-card-section>
   <q-card-section class="bg-white">
-    <q-list class="q-col-gutter-md row items-start">
+    <div class="row">
+      <div class="col-1 self-center">
+        <q-btn
+          round
+          v-show="avatarTab > 0"
+          size="md"
+          color="indigo"
+          icon="fas fa-arrow-left"
+          @click="$refs.avatarTabs.previous()" />
+      </div>
+      <div class="col-10">
+        <q-tab-panels
+          v-model="avatarTab"
+          ref="avatarTabs"
+          animated>
+          <q-tab-panel
+            :name="tabIndex"
+            v-for="(avatarPage, tabIndex) in avatarsChunk">
+            <q-list class="q-col-gutter-md row items-start">
+              <q-item
+                dense
+                class="col-3 q-my-xs q-pb-md"
+                v-for="avatar in avatarPage"
+                clickable
+                v-ripple
+                :disable="isAvatarFree(avatar)"
+                :active="team.avatar === avatar"
+                active-class="bg-blue-2"
+                @click="selectAvatar(avatar)">
+                <q-item-section>
+                  <q-img contain :src="`statics/avatars/${avatar}`" style="height: 50px;" />
+                </q-item-section>
+              </q-item>
+          </q-list>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
+      <div class="col-1 self-center">
+        <q-btn
+          round
+          v-show="avatarTab < avatarsChunk.length - 1"
+          size="md"
+          color="indigo"
+          icon="fas fa-arrow-right"
+          @click="$refs.avatarTabs.next()" />
+      </div>
+    </div>
+    <!-- <q-list class="q-col-gutter-md row items-start">
         <q-item
           dense
           class="col-3 q-my-xs q-pb-md"
@@ -19,7 +69,7 @@
             <q-img contain :src="`statics/avatars/${avatar}`" style="height: 50px;" />
           </q-item-section>
         </q-item>
-    </q-list>
+    </q-list> -->
     <q-input
       outlined
       v-model="team.name"

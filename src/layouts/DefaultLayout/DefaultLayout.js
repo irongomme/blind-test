@@ -1,12 +1,12 @@
 import RoundMixin from '@mixins/round.mixin';
+import TeamMixin from '@mixins/team.mixin';
 import Game from '@models/game.model';
-import Team from '@models/team.model';
 import Round from '@models/round.model';
 import EventBus from '@store/event-bus';
 
 export default {
   name: 'DefaultLayout',
-  mixins: [RoundMixin],
+  mixins: [RoundMixin, TeamMixin],
   data() {
     return {
       hiddenHeader: false,
@@ -25,7 +25,6 @@ export default {
   computed: {
     game: () => Game.query().first() || false,
     rounds: () => Round.query().all(),
-    teamsCount: () => Team.query().count(),
     currentPage() {
       return this.$route.path;
     },

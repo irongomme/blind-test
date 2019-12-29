@@ -30,19 +30,10 @@
             {{ teamsCount }}
           </q-badge>
         </q-btn>
-        <q-btn
-          flat
-          v-if="game && teamsCount < game.numberOfTeams"
-          v-show="currentPage === '/equipes'"
-          icon="fas fa-user-friends"
-          label="Nouvelle équipe"
-          aria-label="Nouvelle équipe"
-          color="positive"
-          size="sm"
-          class="q-ml-sm q-mt-md"
-          @click="emitGlobalEvent('addTeam')" />
 
-        <div v-if="game && rounds.length === 0" class="q-ml-xl">
+        <div
+          v-if="game && rounds.length === 0 && teamsCount >= game.numberOfTeamsPerMatch"
+          class="q-ml-xl">
           <q-btn
             flat
             round

@@ -1,16 +1,5 @@
 <q-page padding class="flex column">
   <div style="padding-top: 72px;">
-    <div class="text-center">
-      <q-btn
-          class="q-pa-lg"
-          size="lg"
-          icon="fas fa-users-cog"
-          color="indigo"
-          text-color="white"
-          @click="generateFakeTeams()"
-          label="Générer des fausses équipes pour tester"
-          v-if="teams.length === 0" />
-    </div>
 
     <!-- Listing equipes -->
     <div class="row items-start q-col-gutter-md">
@@ -26,6 +15,35 @@
       </div>
     </div>
   </div>
+
+   <q-footer v-if="game && teamsCount < game.numberOfTeams">
+    <div class="row full-width navbar-bottom q-py-sm">
+      <div class="col-6">
+        <q-btn
+          flat
+          class="q-ml-md q-mt-sm"
+          size="lg"
+          icon="fas fa-flask"
+          color="indigo"
+          text-color="white"
+          @click="generateFakeTeams()"
+          label="Créer des fausses équipes de test"
+          v-if="teams.length === 0" />
+      </div>
+      <div class="col-6 text-right">
+        <q-btn
+          flat
+          class="q-mr-md"
+          size="xl"
+          icon="fas fa-user-friends"
+          label="Nouvelle équipe"
+          aria-label="Nouvelle équipe"
+          color="positive"
+          @click="emitGlobalEvent('addTeam')" />
+      </div>
+    </div>
+  </q-footer>
+
   <!-- Création / modification équipe -->
   <q-dialog
     persistent

@@ -24,7 +24,7 @@ export default {
         // Surcharge des valeurs
         ...optionsObject,
       };
-      console.log(options);
+
       // Nouveau round
       const newRound = new Round();
       // equipes
