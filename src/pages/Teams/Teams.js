@@ -1,5 +1,6 @@
 import axios from 'axios';
 import TeamMixin from '@mixins/team.mixin';
+import RoundMixin from '@mixins/round.mixin';
 import TeamListCard from '@components/teams/TeamListCard';
 import TeamFormCard from '@components/teams/TeamFormCard';
 import Game from '@models/game.model';
@@ -9,7 +10,7 @@ import EventBus from '@store/event-bus';
 export default {
   name: 'PageTeams',
   components: { TeamListCard, TeamFormCard },
-  mixins: [TeamMixin],
+  mixins: [TeamMixin, RoundMixin],
   data() {
     return {
       teamObject: {},

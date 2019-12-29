@@ -21,12 +21,15 @@ export default {
       const options = {
         // Cumul des score du round précédent
         cumulativeScores: false,
+        // Scores aléatoires pour tester
+        randomScores: false,
         // Surcharge des valeurs
         ...optionsObject,
       };
 
       // Nouveau round
       const newRound = new Round();
+      const matchs = [];
       // equipes
       let teams = [];
       // Lecture de tous les rounds
@@ -51,61 +54,47 @@ export default {
         teams = lastMatchTeams.map(matchTeam => matchTeam.team);
       }
 
-      // Melange des equipes
-      const allTeams = _.shuffle(teams);
-      // Valeurs max des incréments
-      const matchCount = Math.ceil(allTeams.length / this.game.numberOfTeamsPerMatch);
-      const matchTeamsCount = this.game.numberOfTeamsPerMatch;
-
-      // Pour chaque match on va attribuer x équipes
-      for (let matchInc = 0; matchInc < matchCount; matchInc += 1) {
-        // Préparation du tableau d'équipes pour le nouveau match
+      // Découpage par match des équipes mélangées au hasard
+      const matchsTeams = _.chunk(
+        _.shuffle(teams),
+        this.game.numberOfTeamsPerMatch,
+      );
+      // Création des matchs
+      matchsTeams.forEach((matchTeams) => {
+        // Nouveau match
         const newMatch = new Match();
-        const matchTeams = [];
-        // Découpage des x équipes
-        for (let teamInc = 0; teamInc < matchTeamsCount; teamInc += 1) {
-          const currentTeam = allTeams[teamInc + matchInc * matchTeamsCount];
-          let initialScore;
-          // Fabrication du pool de x équipes dans ce match
-          matchTeams.push(currentTeam);
-          // Gestion du cumul des scores
-          if (options.cumulativeScores === true) {
-            const lastMatchTeam = MatchTeam.query()
-              .where('team_id', currentTeam.id)
-              .last();
-            initialScore = lastMatchTeam.score;
-          } else {
-            initialScore = 0;
-            // initialScore = Math.floor(Math.random() * 10);
-          }
-          // Création de la relation
+        // Pour chaque équipe dans ce match
+        matchTeams.forEach((team, teamIndex) => {
+          // Gestion du score initial
+          const emptyScore = options.randomScores ? Math.floor(Math.random() * 10) : 0;
+          const initialScore = options.cumulativeScores === true
+            // Gestion du cumul des scores
+            ? MatchTeam.query().where('team_id', team.id).last().score
+            // Score initial à zéro
+            : emptyScore;
+
+          // Création de la relation match - équipe
           MatchTeam.insert({
             data: {
               match_id: newMatch.id,
-              team_id: currentTeam.id,
-              color: this.matchColors[teamInc],
-              // Temporaire
+              team_id: team.id,
+              color: this.matchColors[teamIndex],
               score: initialScore,
             },
           });
-        }
-
-        // Insertion du nouveau match
-        Match.insert({
-          data: {
-            id: newMatch.id,
-            round_id: newRound.id,
-            teams: matchTeams,
-          },
         });
-      }
+
+        matchs.push({
+          id: newMatch.id,
+          round_id: newRound.id,
+          teams: matchTeams,
+        });
+      });
 
       // Enfin, insertion de nouveau round
-      Round.insert({
-        data: {
-          id: newRound.id,
-        },
-      }).then(() => {
+      Round.insert({ data: { id: newRound.id } });
+      // Insertion des nouveaux matchs
+      Match.insert({ data: matchs }).then(() => {
         // Redirection vers la nouvelle manche
         this.$router.push({
           path: `/manches/${newRound.id}`,
@@ -113,33 +102,45 @@ export default {
       });
     },
     newSeparationMatch(roundId, matchTeams) {
-      const newMatch = new Match();
-      // Découpage des x équipes
-      for (let matchTeamInc = 0; matchTeamInc < matchTeams.length; matchTeamInc += 1) {
-        // Création de la nouvelle relation
-        MatchTeam.insert({
-          data: {
-            match_id: newMatch.id,
-            team_id: matchTeams[matchTeamInc].team.id,
-            color: this.matchColors[matchTeamInc],
-            score: matchTeams[matchTeamInc].score,
-          },
-        });
-        // Suppression de l'ancienne
-        MatchTeam.delete(matchTeams[matchTeamInc].id);
+      const matchs = [];
+      let teamsPerMatch = this.game.numberOfTeamsPerMatch;
+      // On verifie qu'un match ne va pas se retrouver avec une seule équipe
+      if (matchTeams.length % this.game.numberOfTeamsPerMatch === 1) {
+        teamsPerMatch -= 1;
       }
+      // Découpage par match des équipes mélangées au hasard
+      const matchsTeams = _.chunk(_.shuffle(matchTeams), teamsPerMatch);
+      // Création des matchs
+      matchsTeams.forEach((matchTeamSet) => {
+        const newMatch = new Match();
+        // Pour chaque pool d'équipes
+        matchTeamSet.forEach((matchTeamItem, matchTeamIndex) => {
+          // Création de la nouvelle relation
+          MatchTeam.insert({
+            data: {
+              match_id: newMatch.id,
+              team_id: matchTeamItem.team.id,
+              color: this.matchColors[matchTeamIndex],
+              score: matchTeamItem.score,
+            },
+          });
+          // Suppression de l'ancienne
+          MatchTeam.delete(matchTeamItem.id);
+        });
 
-      // Insertion du nouveau match
-      return Match.insert({
-        data: {
+        matchs.push({
           id: newMatch.id,
           round_id: roundId,
           teams: matchTeams.map(matchTeam => matchTeam.team),
-        },
+        });
       });
+
+      // Insertion des nouveau matchs
+      return Match.insert({ data: matchs });
     },
   },
   computed: {
     game: () => Game.query().first() || false,
+    roundsCount: () => Round.query().count() || 0,
   },
 };
