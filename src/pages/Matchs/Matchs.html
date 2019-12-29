@@ -43,8 +43,8 @@
           v-show="isRoundClosed && matchTab !== 0"
           @click="$refs.matchTabs.previous()" />
       </div>
-      <div class="col-2 text-right q-pt-md q-pr-md text-h4">
-        <q-icon color="blue-4" name="fas fa-music" class="q-ml-sm">
+      <!-- <div class="col-2 text-right q-pt-md q-pr-md text-h4">
+        <q-icon color="indigo-2" name="fas fa-music" class="q-ml-sm">
           <q-badge
             floating
             color="white"
@@ -53,11 +53,14 @@
             {{ allScoresCount }}
           </q-badge>
         </q-icon>
-      </div>
-      <div class="col-2 text-left q-pt-md q-pl-md text-h4">
+      </div> -->
+      <div class="col-4 text-center q-pt-md q-pl-md text-h4">
+        <q-icon
+          name="fas fa-music"
+          class="q-ml-md text-indigo-2" />
         <q-icon
           :name="'fas fa-dice-' + wordNumbers[matchTab]"
-          class="q-ml-md text-blue-4" />
+          class="q-ml-md text-indigo-2" />
       </div>
       <div class="col-4 text-right">
         <q-btn flat round v-close-popup
@@ -112,6 +115,8 @@
 
   <DialogRoundSummary
     v-model="roundSummaryPopup"
-    :teamsRanking="roundTeamsRanking" />
+    :roundId="$route.params.round_id"
+    :teamsRanking="roundTeamsRanking"
+    @newMatch="$refs.matchTabs.next()" />
 
 </q-page>

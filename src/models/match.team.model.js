@@ -13,6 +13,8 @@ export default class MatchTeam extends Model {
       team_id: this.attr(null),
       color: this.attr(null),
       score: this.attr(0),
+      is_disqualified: this.attr(false),
+      need_separation: this.attr(false),
       match: this.belongsTo(Match, 'match_id'),
       team: this.belongsTo(Team, 'team_id'),
     };
