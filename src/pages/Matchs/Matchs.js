@@ -25,6 +25,7 @@ export default {
       successTeamColor: '',
       successTeamName: '',
       successImage: '',
+      timerSuccess: false,
       wordNumbers: ['one', 'two', 'three', 'four', 'five', 'six'],
     };
   },
@@ -119,9 +120,12 @@ export default {
       // Ouverture
       this.teamSuccessPopup = true;
       // Timer
-      setTimeout(() => {
+      this.timerSuccess = setTimeout(() => {
         this.teamSuccessPopup = false;
       }, 8000);
+    },
+    resetSuccess() {
+      clearTimeout(this.timerSuccess);
     },
     isInBestMatchTeam(matchTeamId) {
       return _.indexOf(this.bestMatchTeam, matchTeamId) !== -1;

@@ -52,7 +52,7 @@
               Consulter la rencontre précédente
             </q-tooltip>
           </q-btn>
-          <q-chip size="xl" class="bg-white">
+          <q-chip size="xl" class="bg-white q-mt-sm">
             <q-icon
               v-show="!currentMatch.is_final"
               color="indigo"
@@ -70,7 +70,7 @@
             icon="fas fa-forward"
             size="xl"
             class="q-mr-md"
-            :disable="matchSummaryPopup"
+            :disable="matchSummaryPopup || currentMatch.is_final"
             @click="nextMatch()"
             v-show="matchTab !== (currentMatch.matchTeams.length - 1)
               || !currentMatch.is_closed">
@@ -113,7 +113,8 @@
     auto-close
     v-model="teamSuccessPopup"
     transition-show="fade"
-    transition-hide="fade">
+    transition-hide="fade"
+    @hide="resetSuccess()">
     <q-card dark style="overflow: hidden;">
       <q-card-section class="text-h3 text-center q-py-xl">
         <q-icon name="fas fa-star q-mr-lg" style="margin-bottom:22px;" />
