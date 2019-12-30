@@ -54,9 +54,16 @@
           </q-btn>
           <q-chip size="xl" class="bg-white">
             <q-icon
+              v-show="!currentMatch.is_final"
               color="indigo"
               :name="`fas fa-dice-${wordNumbers[matchTab]}`"
               style="font-size: 40px;" />
+            <div
+              class="text-indigo text-uppercase text-h5 text-bold"
+              v-show="currentMatch.is_final">
+              <q-icon name="fas fa-trophy" class="q-mb-xs" />
+              <span class="q-ml-sm">Finale</span>
+            </div>
           </q-chip>
           <q-btn flat round v-close-popup
             color="white"
