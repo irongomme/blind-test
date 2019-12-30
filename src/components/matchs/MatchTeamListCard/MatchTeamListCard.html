@@ -24,15 +24,15 @@
       </div>
       <div class="col-4 text-center">
         <q-chip size="xl" class="bg-white">
-          <span v-show="!isFinalWon">{{ match.score }} points</span>
+          <span v-show="!isFinalWon || !match.match.is_final">{{ match.score }} points</span>
           <q-icon
             :class="`text-uppercase text-${color}`"
-            v-show="isFinalWon"
+            v-show="isFinalWon && match.match.is_final"
             name="fas fa-trophy"
             class="q-mr-sm" />
           <span
             :class="`text-uppercase text-${color}`"
-            v-show="isFinalWon">
+            v-show="isFinalWon && match.match.is_final">
             {{ finalFrenchPosition[match.team.rank - 1] }}
           </span>
         </q-chip>
