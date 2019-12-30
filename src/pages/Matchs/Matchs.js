@@ -64,7 +64,7 @@ export default {
       });
 
       // En finale, il faut détecter la position des gagnants
-      if (score === this.game.finalMatchScore) {
+      if (matchTeam.match.is_final && score === this.game.finalMatchScore) {
         // Recherche du rang
         const currentRank = this.currentMatch.matchTeams
           .filter(match => match.score === this.game.finalMatchScore)
