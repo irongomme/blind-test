@@ -6,7 +6,11 @@
   <q-card-section class="text-white text-bold">
     <div class="row q-pt-md">
       <div class="col-4 text-left">
-        <q-icon class="text-white q-mr-md q-mt-sm" name="fas fa-hamburger" size="md" v-if="lastScored">
+        <q-icon
+          class="text-white q-mr-md q-mt-sm"
+          name="fas fa-hamburger"
+          size="md"
+          v-if="lastScored">
           <q-tooltip
             anchor="center right"
             self="center left"
@@ -20,7 +24,17 @@
       </div>
       <div class="col-4 text-center">
         <q-chip size="xl" class="bg-white">
-          {{ match.score }} points
+          <span v-show="!isFinalWon">{{ match.score }} points</span>
+          <q-icon
+            :class="`text-uppercase text-${color}`"
+            v-show="isFinalWon"
+            name="fas fa-trophy"
+            class="q-mr-sm" />
+          <span
+            :class="`text-uppercase text-${color}`"
+            v-show="isFinalWon">
+            {{ finalFrenchPosition[match.team.rank - 1] }}
+          </span>
         </q-chip>
       </div>
       <div class="col-4 text-right">
@@ -47,7 +61,7 @@
     </q-img>
   </div>
 
-  <q-card-actions align="between" v-show="!match.match.is_closed">
+  <q-card-actions align="between" v-show="!isMatchClosed">
     <q-btn
       flat
       v-ripple
@@ -65,7 +79,9 @@
       @click.prevent="$emit('updateScore', match, match.score + 1)" />
   </q-card-actions>
 
-  <q-card-section class="text-h6 text-center text-white" v-show="match.match.is_closed">
+  <q-card-section
+    class="text-h6 text-center text-white"
+    v-show="isMatchClosed">
     Match terminé !
   </q-card-section>
 

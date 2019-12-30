@@ -8,6 +8,7 @@ export default class Match extends Model {
     return {
       id: this.uid(() => uid()),
       round_id: this.attr(null),
+      is_final: this.attr(false),
       is_closed: this.attr(false),
     };
   }

@@ -87,6 +87,7 @@ export default {
         matchs.push({
           id: newMatch.id,
           round_id: newRound.id,
+          is_final: this.game.numberOfTeamsPerMatch === teams.length,
           teams: matchTeams,
         });
       });

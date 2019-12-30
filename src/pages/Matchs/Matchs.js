@@ -2,8 +2,10 @@ import _ from 'lodash';
 import MatchTeamListCard from '@components/matchs/MatchTeamListCard';
 import DialogMatchSummary from '@components/matchs/DialogMatchSummary';
 import DialogRoundSummary from '@components/rounds/DialogRoundSummary';
+import Game from '@models/game.model';
 import Match from '@models/match.model';
 import MatchTeam from '@models/match.team.model';
+import Team from '@models/team.model';
 import AnimatedSuccess from '@json/animated_success.json';
 
 export default {
@@ -23,14 +25,7 @@ export default {
       successTeamColor: '',
       successTeamName: '',
       successImage: '',
-      wordNumbers: [
-        'one',
-        'two',
-        'three',
-        'four',
-        'five',
-        'six',
-      ],
+      wordNumbers: ['one', 'two', 'three', 'four', 'five', 'six'],
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -67,13 +62,35 @@ export default {
           score,
         },
       });
+
+      // En finale, il faut détecter la position des gagnants
+      if (score === this.game.finalMatchScore) {
+        // Recherche du rang
+        const currentRank = this.currentMatch.matchTeams
+          .filter(match => match.score === this.game.finalMatchScore)
+          .length;
+        // Mise à jour du nouveau vainqueur
+        Team.update({
+          where: matchTeam.team_id,
+          data: { rank: currentRank },
+        });
+
+        // Si tous les autres ont déjà gagnés
+        if (currentRank === this.currentMatch.matchTeams.length - 1) {
+          const lastMatchTeam = this.currentMatch.matchTeams
+            .filter(match => match.score < this.game.finalMatchScore);
+          // Mise à jour du dernier
+          Team.update({
+            where: lastMatchTeam[0].team_id,
+            data: { rank: currentRank + 1 },
+          });
+        }
+      }
     },
     closeMatch() {
       return Match.update({
         where: this.currentMatch.id,
-        data: {
-          is_closed: true,
-        },
+        data: { is_closed: true },
       });
     },
     nextMatch() {
@@ -117,6 +134,7 @@ export default {
   },
   computed: {
     animatedSucess: () => AnimatedSuccess,
+    game: () => Game.query().first() || false,
     matchs() {
       const currentMatchs = [];
 
@@ -128,6 +146,7 @@ export default {
         currentMatchs.push({
           id: matchs[matchInc].id,
           is_closed: matchs[matchInc].is_closed,
+          is_final: matchs[matchInc].is_final,
           matchTeams: MatchTeam.query()
             .where('match_id', matchs[matchInc].id)
             .with('team|match')
@@ -176,6 +195,14 @@ export default {
     isRoundClosed() {
       const reducer = (compute, value) => compute && value.is_closed;
       return this.matchs.reduce(reducer, true);
+    },
+    isGameOver() {
+      const winningPlayersCount = Team.query()
+        .where(team => team.rank > 0)
+        .count();
+
+      return this.currentMatch.is_final
+        && winningPlayersCount === this.currentMatch.matchTeams.length - 1;
     },
   },
 };

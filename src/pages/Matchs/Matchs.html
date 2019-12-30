@@ -19,6 +19,7 @@
                   :color="matchTeamItem.color"
                   :star="isInBestMatchTeam(matchTeamItem.id)"
                   :lastScored="lastScored === matchTeamItem.id"
+                  :gameOver="isGameOver"
                   @updateScore="updateScore" />
               </div>
             </div>
@@ -28,7 +29,7 @@
     </div>
   </div>
 
-  <q-footer>
+  <q-footer v-show="!currentMatch.is_final">
     <div class="row full-width navbar-bottom q-py-sm">
       <div class="col-5 text-left">
         <q-btn
@@ -71,7 +72,8 @@
           class="q-mr-md"
           :disable="matchSummaryPopup"
           @click="nextMatch()"
-          v-show="matchTab !== (currentMatch.matchTeams.length - 1) || !currentMatch.is_closed">
+          v-show="matchTab !== (currentMatch.matchTeams.length - 1)
+            || !currentMatch.is_closed">
           <q-tooltip
             anchor="center left"
             self="center right"
@@ -88,7 +90,8 @@
           size="xl"
           class="q-mr-md"
           @click="showRoundSummary()"
-          v-show="matchTab === (currentMatch.matchTeams.length - 1) && currentMatch.is_closed">
+          v-show="matchTab === (currentMatch.matchTeams.length - 1)
+            && currentMatch.is_closed">
           <q-tooltip
             anchor="center left"
             self="center right"

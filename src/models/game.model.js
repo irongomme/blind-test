@@ -9,6 +9,7 @@ export default class Game extends Model {
       numberOfTeamsPerMatch: this.attr(4),
       minTeamSize: this.attr(2),
       maxTeamSize: this.attr(4),
+      finalMatchScore: this.attr(3),
     };
   }
 }
