@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Game from '@models/game.model';
 import RoundMixin from '@mixins/round.mixin';
 import Round from '@models/round.model';
 import MatchTeam from '@models/match.team.model';
@@ -28,17 +29,12 @@ export default {
     processSeparation() {
       let waiversTeams = [];
 
-      // Equipes qualifiees
-      const qualifiedMatchTeams = this.teamsRanking
-        .filter((matchTeam, index) => index < this.keepTeamsQuantity);
-      // Equipes non qualifiees
-      const unqualifiedMatchTeams = this.teamsRanking
-        .filter((matchTeam, index) => index >= this.keepTeamsQuantity);
-
       // Score le plus bas des equipes qualifiees
-      const leastScore = Math.min(...qualifiedMatchTeams.map(matchTeam => matchTeam.score));
+      const leastScore = Math.min(
+        ...this.qualifiedMatchTeams.map(matchTeam => matchTeam.score),
+      );
       // Equipes a ne pas disqualifier tout de suite
-      const unqualifiedWaiversTeams = unqualifiedMatchTeams
+      const unqualifiedWaiversTeams = this.unqualifiedMatchTeams
         .filter(matchTeam => matchTeam.score === leastScore);
 
       // Si des equipes doivent se trouver en ballotage
@@ -48,7 +44,12 @@ export default {
           .filter(matchTeam => matchTeam.score === leastScore);
         // On les insere dans la liste des equipes toujours qualifiees
         unqualifiedWaiversTeams
-          .forEach(matchTeam => qualifiedMatchTeams.push(matchTeam));
+          .forEach(matchTeam => this.qualifiedMatchTeams.push(matchTeam));
+      }
+
+      // Si le nombre d'équipe nécessaire pour la finale est atteint
+      if (this.qualifiedMatchTeams.length === this.game.numberOfTeamsPerMatch) {
+        this.cumulativeScores = false;
       }
 
       // On met à jour toutes les entrées match-equipe
@@ -56,7 +57,7 @@ export default {
         where: matchTeam.id,
         data: {
           is_disqualified: (
-            _.indexOf(qualifiedMatchTeams.map(item => item.id), matchTeam.id) === -1
+            _.indexOf(this.qualifiedMatchTeams.map(item => item.id), matchTeam.id) === -1
           ),
           need_separation: (
             _.indexOf(waiversTeams.map(item => item.id), matchTeam.id) !== -1
@@ -81,6 +82,7 @@ export default {
     },
   },
   computed: {
+    game: () => Game.query().first() || false,
     opened: {
       get() {
         return this.value;
@@ -105,6 +107,17 @@ export default {
     needSeparation() {
       const reducer = (compute, value) => compute + (value.need_separation ? 1 : 0);
       return this.teamsRanking.reduce(reducer, 0) > 0;
+    },
+    qualifiedMatchTeams() {
+      return this.teamsRanking
+        .filter((matchTeam, index) => index < this.keepTeamsQuantity);
+    },
+    unqualifiedMatchTeams() {
+      return this.teamsRanking
+        .filter((matchTeam, index) => index >= this.keepTeamsQuantity);
+    },
+    isFinale() {
+      return this.qualifiedMatchTeams.length === this.game.numberOfTeamsPerMatch;
     },
   },
 };

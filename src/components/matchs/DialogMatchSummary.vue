@@ -1,7 +1,6 @@
 <template>
   <q-dialog
     ref="dialog-close-match"
-    persistent
     v-model="opened"
     transition-show="slide-down"
     transition-hide="fade">
@@ -46,15 +45,7 @@
         </div>
       </q-card-section>
       <q-separator />
-      <q-card-actions align="between">
-        <q-btn
-          flat
-          v-ripple
-          color="grey"
-          icon="fas fa-times"
-          label="Annuler"
-          size="lg"
-          v-close-popup />
+      <q-card-actions align="right">
         <q-btn
           flat
           v-ripple
