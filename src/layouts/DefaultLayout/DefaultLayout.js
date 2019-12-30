@@ -24,11 +24,6 @@ export default {
       ],
     };
   },
-  created() {
-    if (!this.game) {
-      this.newGame();
-    }
-  },
   methods: {
     emitGlobalEvent(event) {
       EventBus.$emit(event);
