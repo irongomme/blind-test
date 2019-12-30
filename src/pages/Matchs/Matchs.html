@@ -1,4 +1,4 @@
-<q-page padding class="flex flex-center q-pt-xl">
+<q-page padding class="flex q-pt-xl">
   <div class="full-width" v-if="matchs">
     <div class="q-gutter-y-md" style="padding-top: 62px;">
       <q-card class="bg-grey-10">
@@ -40,7 +40,7 @@
             icon="fas fa-backward"
             size="xl"
             class="q-ml-md"
-            disabled="!isRoundClosed || matchTab === 0"
+            :disable="!isRoundClosed || matchTab === 0"
             @click="$refs.matchTabs.previous()">
             <q-tooltip
               anchor="center right"
