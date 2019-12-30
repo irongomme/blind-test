@@ -1,0 +1,144 @@
+<q-dialog
+  ref="dialog-round-summary"
+  persistent
+  v-model="opened"
+  transition-show="slide-down"
+  transition-hide="fade"
+  @show="processSeparation">
+  <q-card style="width: 80%;max-width: 80vw;">
+    <q-card-section>
+      <div class="row">
+        <div class="full-width">
+          <q-list
+            dense
+            class="q-gutter-x-sm column"
+            :style="{ height: (listItemHeight * (teamsRanking.length / 2)) + 'px' }">
+            <q-item
+              v-ripple
+              :class="{ 'col-6': true, 'bg-indigo-2': matchTeam.need_separation }"
+              :style="{ height: listItemHeight + 'px' }"
+              v-for="matchTeam in teamsRanking"
+              :key="matchTeam.id"
+              :disable="matchTeam.is_disqualified">
+             <q-item-section avatar>
+                <q-avatar rounded>
+                  <q-img cover :src="`statics/avatars/${matchTeam.team.avatar}`" />
+                </q-avatar>
+              </q-item-section>
+              <q-item-section class="text-h6 text-indigo">
+                <q-item-label lines="1">{{ matchTeam.team.name }}</q-item-label>
+
+              </q-item-section>
+              <q-item-section>
+                <q-linear-progress
+                  stripe
+                  rounded
+                  style="height: 24px;margin-top: 8px;"
+                  :value="(matchTeam.score / bestScore)"
+                  color="positive"
+                  class="q-mb-sm" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label caption>
+                  <q-badge
+                    class="text-bold text-body2 "
+                    align="middle"
+                    color="indigo"
+                    text-color="white"
+                    :label="matchTeam.score + ' Point' + (matchTeam.score > 1 ? 's' : '' )" />
+                </q-item-label>
+              </q-item-section>
+              <q-item-section class="text-white text-bold text-subtitle1">
+                <q-item-label>
+                  <q-icon
+                    class="q-mr-md"
+                    color="white"
+                    name="fas fa-balance-scale"
+                    v-show="matchTeam.need_separation" />
+                    EGALITÉ !
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+      </div>
+    </q-card-section>
+    <q-separator v-if="roundId === lastRoundId" />
+    <q-card-section
+      class="bg-indigo text-white"
+      v-if="roundId === lastRoundId">
+      <div class="row">
+        <div class="col-9 text-right">
+          <div class="q-gutter-sm">
+            <q-radio
+              color="white"
+              v-model="keepTeamsQuantity"
+              :val="teamsRanking.length"
+              label="Non éliminatoire"
+              @input="processSeparation()" />
+            <q-radio
+              color="white"
+              v-model="keepTeamsQuantity"
+              :val="teamsRanking.length / 2"
+              label="Disqualifier la moitié"
+              @input="processSeparation()" />
+            <q-radio
+              color="white"
+              v-model="keepTeamsQuantity"
+              :val="teamsRanking.length / 4 * 3"
+              label="Disqualifier un quart"
+              @input="processSeparation()" />
+          </div>
+        </div>
+        <div class="col-3 text-right">
+          <q-toggle
+            color="white"
+            v-model="cumulativeScores"
+            label="Conserver les scores"
+            v-show="!needSeparation" />
+        </div>
+
+      </div>
+    </q-card-section>
+    <q-separator />
+    <q-card-actions align="between" v-if="roundId === lastRoundId">
+      <q-btn
+        flat
+        v-ripple
+        color="grey"
+        icon="fas fa-times"
+        label="Annuler"
+        size="lg"
+        v-close-popup />
+      <q-btn
+        flat
+        v-ripple
+        color="indigo"
+        icon="fas fa-dice"
+        label="Nouvelle manche"
+        @click="newRound({ cumulativeScores })"
+        size="lg"
+        v-if="!needSeparation"
+        v-close-popup />
+      <q-btn
+        flat
+        v-ripple
+        color="indigo"
+        icon="fas fa-balance-scale"
+        label="Départager les équipes"
+        @click="sendSeparationMatch()"
+        size="lg"
+        v-if="needSeparation"
+        v-close-popup />
+      </q-card-actions>
+      <q-card-actions align="right" v-if="roundId !== lastRoundId">
+        <q-btn
+          flat
+          v-ripple
+          color="indigo"
+          label="Ok"
+          size="lg"
+          v-close-popup />
+      </q-card-actions>
+  </q-card>
+</q-dialog>

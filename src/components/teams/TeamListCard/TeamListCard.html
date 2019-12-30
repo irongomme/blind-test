@@ -17,7 +17,7 @@
   </q-card-section>
 
   <q-list class="bg-white" separator>
-    <q-item clickable v-ripple v-for="player in team.players" :key="player.id">
+    <q-item v-ripple v-for="player in team.players" :key="player.id">
       <q-item-section avatar>
         <q-icon :color="color" name="fas fa-user" />
       </q-item-section>
