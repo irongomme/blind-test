@@ -34,7 +34,7 @@
           size="lg">
           <q-badge
             floating
-            color="indigo"
+            color="indigo-5"
             class="q-mt-sm">
             {{ teamsCount }}
           </q-badge>
@@ -48,30 +48,6 @@
             Gérer les équipes
           </q-tooltip>
         </q-btn>
-
-        <div
-          v-if="game && rounds.length === 0 && teamsCount >= game.numberOfTeamsPerMatch"
-          class="q-ml-xl">
-          <q-btn
-            flat
-            round
-            icon="fas fa-dice"
-            aria-label="Manches"
-            color="white"
-            size="lg"
-            class="q-ml-sm"
-            @click.prevent="newRound()">
-            <q-tooltip
-              anchor="bottom left"
-              self="center left"
-              :offset="[0, 26]"
-              content-style="font-size: 16px"
-              transition-show="scale"
-              transition-hide="scale">
-              Lancer une nouvelle manche
-            </q-tooltip>
-          </q-btn>
-        </div>
 
         <div v-if="game && rounds.length > 0" class="q-ml-xl">
           <q-btn
@@ -88,7 +64,7 @@
             :to="'/manches/' + round.id">
             <q-badge
               floating
-              :color="currentPage === '/manches/' + round.id ? 'indigo' : 'grey-7'"
+              :color="currentPage === '/manches/' + round.id ? 'indigo-5' : 'grey-7'"
               class="q-mt-sm">
               {{ parseInt(roundIndex) + 1 }}
             </q-badge>

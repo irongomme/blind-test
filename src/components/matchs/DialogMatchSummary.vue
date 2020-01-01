@@ -5,9 +5,6 @@
     transition-show="slide-down"
     transition-hide="fade">
     <q-card style="width: 900px;max-width: 80vw;">
-      <q-card-section class="text-h6 bg-indigo text-white">
-        Résultats du Match
-      </q-card-section>
       <q-card-section>
         <div class="q-pa-md">
           <q-list separator>
@@ -44,14 +41,14 @@
           </q-list>
         </div>
       </q-card-section>
-      <q-separator />
-      <q-card-actions align="right">
+
+      <q-card-actions align="right" class="bg-blue-grey-2">
         <q-btn
-          flat
+          push
           v-ripple
-          icon-right="fas fa-arrow-right"
-          label="Fin du match"
-          color="indigo"
+          icon-right="fas fa-forward"
+          label="Match suivant"
+          color="indigo-5"
           size="lg"
           @click="$emit('next-match')"
           v-close-popup />

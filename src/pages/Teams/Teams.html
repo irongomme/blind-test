@@ -1,5 +1,5 @@
 <q-page padding class="flex column">
-  <div style="padding-top: 72px;">
+  <div style="padding-top: 62px;">
 
     <!-- Listing equipes -->
     <div class="row items-start q-col-gutter-md">
@@ -24,7 +24,6 @@
           class="q-ml-md"
           size="lg"
           icon="fas fa-flask"
-          color="indigo"
           text-color="white"
           @click="generateFakeTeams()"
           v-if="teams.length === 0">
@@ -43,7 +42,6 @@
           class="q-ml-md"
           size="lg"
           icon="fas fa-random"
-          color="indigo"
           text-color="white"
           @click="newRound({ randomScores: true })"
           v-if="teams.length === game.numberOfTeams">
@@ -60,23 +58,23 @@
       </div>
       <div class="col-6 text-right">
         <q-btn
-          flat
+          push
           class="q-mr-md"
           size="lg"
           icon="fas fa-user-friends"
           label="Nouvelle équipe"
           aria-label="Nouvelle équipe"
-          color="white"
+          color="indigo-5"
           @click="emitGlobalEvent('addTeam')"
           v-if="teamsCount < game.numberOfTeams" />
         <q-btn
-          flat
+          push
           class="q-mr-md"
           size="lg"
           icon="fas fa-dice"
           label="Nouvelle manche"
           aria-label="Nouvelle manche"
-          color="white"
+          color="indigo-5"
           @click="newRound()"
           v-if="teamsCount === game.numberOfTeams" />
       </div>
@@ -85,7 +83,6 @@
 
   <!-- Création / modification équipe -->
   <q-dialog
-    persistent
     v-model="teamFormPopup"
     position="top">
     <TeamFormCard

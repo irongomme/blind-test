@@ -5,7 +5,7 @@ export default {
     alterable: Boolean,
     color: {
       type: String,
-      default: 'indigo',
+      default: 'indigo-5',
     },
   },
 };

@@ -1,11 +1,11 @@
 <q-page padding class="flex flex-center">
-  <div style="padding-top: 72px;">
+  <div style="padding-top: 62px;">
     <q-card
       flat
       bordered
       style="width: 640px;"
       class="col-3 col-sm-4 col-xs-6 bg-primary">
-      <q-card-section class="bg-indigo text-h6 text-white">
+      <q-card-section class="bg-indigo-5 text-h6 text-white">
         <q-icon name="fas fa-meteor" class="q-mr-md" />
         Réglages de la partie
       </q-card-section>
@@ -66,15 +66,26 @@
           </q-input>
         </div>
       </q-card-section>
-      <q-card-actions class="bg-indigo-1" align="center">
-        <q-btn
-          flat
-          color="indigo"
-          icon="fas fa-play"
-          :label="game ? 'Lancer une nouvelle partie' : 'Lancer la partie'"
-          @click="newGame()"
-        />
-      </q-card-actions>
     </q-card>
   </div>
+
+  <q-footer>
+    <div class="row full-width navbar-bottom q-py-sm">
+      <div class="col-6">
+
+      </div>
+      <div class="col-6 text-right">
+        <q-btn
+          push
+          class="q-mr-md"
+          size="lg"
+          color="indigo-5"
+          icon="fas fa-play"
+          label="Lancer la partie"
+          aria-label="Lancer la partie"
+          @click="newGame()"
+        />
+      </div>
+    </div>
+  </q-footer>
 </q-page>

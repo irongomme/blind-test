@@ -24,7 +24,7 @@
                   <q-img cover :src="`statics/avatars/${matchTeam.team.avatar}`" />
                 </q-avatar>
               </q-item-section>
-              <q-item-section class="text-h6 text-indigo">
+              <q-item-section class="text-h6 text-indigo-5">
                 <q-item-label lines="1">{{ matchTeam.team.name }}</q-item-label>
 
               </q-item-section>
@@ -42,7 +42,7 @@
                   <q-badge
                     class="text-bold text-body2 "
                     align="middle"
-                    color="indigo"
+                    color="indigo-5"
                     text-color="white"
                     :label="matchTeam.score + ' Point' + (matchTeam.score > 1 ? 's' : '' )" />
                 </q-item-label>
@@ -64,12 +64,12 @@
     </q-card-section>
 
     <q-separator />
-    <q-card-actions align="between" class="bg-indigo-4 q-px-md q-py-md" v-if="roundId === lastRoundId">
+    <q-card-actions align="between" class="bg-blue-grey-2 q-px-md q-py-md" v-if="roundId === lastRoundId">
       <div class="q-gutter-sm">
         <q-btn-toggle
           v-model="keepTeamsQuantity"
           color="indigo-3"
-          toggle-color="indigo-8"
+          toggle-color="indigo-5"
           :options="[
             {label: 'Non éliminatoire', value: teamsRanking.length},
             {label: 'Disqualifier la moitié', value: (teamsRanking.length / 2)},
@@ -79,15 +79,16 @@
           />
       </div>
       <q-toggle
-        :class="cumulativeScores ? 'text-white text-bold' : 'text-white'"
-        :color="cumulativeScores ? 'indigo-8' : 'white'"
+        :class="cumulativeScores ? 'text-indigo-5 text-bold' : 'text-white'"
+        :color="cumulativeScores ? 'indigo-5' : 'white'"
         v-model="cumulativeScores"
         label="Conserver les scores"
         v-show="!needSeparation && !isFinale" />
       <q-btn
+        push
         v-ripple
-        color="indigo"
-        icon="fas fa-dice"
+        color="indigo-5"
+        icon-right="fas fa-dice"
         :label="isFinale ? 'Jouer la finale' : 'Nouvelle manche'"
         @click="newRound({ cumulativeScores: isFinale ? false : cumulativeScores })"
         size="lg"
@@ -95,7 +96,7 @@
         v-close-popup />
       <q-btn
         v-ripple
-        color="indigo"
+        color="indigo-5"
         icon="fas fa-balance-scale"
         label="Départager les équipes"
         @click="sendSeparationMatch()"
@@ -107,7 +108,7 @@
         <q-btn
           flat
           v-ripple
-          color="indigo"
+          color="indigo-5"
           label="Ok"
           size="lg"
           v-close-popup />

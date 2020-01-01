@@ -2,8 +2,8 @@
   <div class="full-width" v-if="matchs">
     <div class="q-gutter-y-md" style="padding-top: 62px;">
       <q-card class="bg-grey-10">
-        <q-card-section class="text-white text-h4 text-center match-card-bar">
-          <q-chip size="lg" class="bg-white">
+        <q-card-section class="text-h4 text-center match-card-bar">
+          <q-chip size="lg" class="bg-white text-indigo-5">
             <q-icon name="fas fa-music" class="q-mr-sm" />
             <span class="text-bold">{{ allScoresCount }}</span>
           </q-chip>
@@ -55,11 +55,11 @@
           <q-chip size="xl" class="bg-white q-mt-sm">
             <q-icon
               v-show="!currentMatch.is_final"
-              color="indigo"
+              color="indigo-5"
               :name="`fas fa-dice-${wordNumbers[matchTab]}`"
               style="font-size: 40px;" />
             <div
-              class="text-indigo text-uppercase text-h5 text-bold"
+              class="text-indigo-5 text-uppercase text-h5 text-bold"
               v-show="currentMatch.is_final">
               <q-icon name="fas fa-trophy" class="q-mb-xs" />
               <span class="q-ml-sm">Finale</span>
