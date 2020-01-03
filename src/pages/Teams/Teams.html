@@ -26,7 +26,7 @@
           icon="fas fa-flask"
           text-color="white"
           @click="generateFakeTeams()"
-          v-if="teams.length === 0">
+          v-if="teams.length !== parseInt(game.numberOfTeams)">
           <q-tooltip
             anchor="center right"
             self="center left"
@@ -44,7 +44,7 @@
           icon="fas fa-random"
           text-color="white"
           @click="newRound({ randomScores: true })"
-          v-if="teams.length === game.numberOfTeams">
+          v-if="teams.length === parseInt(game.numberOfTeams)">
           <q-tooltip
             anchor="center right"
             self="center left"

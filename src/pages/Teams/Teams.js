@@ -32,11 +32,14 @@ export default {
       EventBus.$emit(event);
     },
     generateFakeTeams() {
+      // Reset des équipes
+      Team.deleteAll();
+      // Création du nombre d'équipes nécessaires
       axios
         .get('/statics/json/fake_teams.json')
         .then((fakeTeams) => {
           Team.insert({
-            data: fakeTeams.data,
+            data: fakeTeams.data.slice(0, this.game.numberOfTeams),
           });
         });
     },
