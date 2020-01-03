@@ -119,7 +119,7 @@ export default {
       // Si l'équipe a atteint le score de finale on annulle le rang
       if (this.playingTeam.is_success && this.playingTeam.matchTeam.team.rank > 0) {
         Team.update({
-          where: this.playingTeam.matchTeam.team_id,
+          where: team => team.rank >= this.playingTeam.matchTeam.team.rank,
           data: { rank: 0 },
         });
       }
