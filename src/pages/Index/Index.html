@@ -3,19 +3,21 @@
     <q-card
       flat
       bordered
-      style="width: 640px;"
-      class="col-3 col-sm-4 col-xs-6 bg-primary">
+      class="bg-primary">
       <q-card-section class="bg-indigo-5 text-h6 text-white">
         <q-icon name="fas fa-meteor" class="q-mr-md" />
         Réglages de la partie
       </q-card-section>
       <q-separator />
       <q-card-section class="bg-white">
+        <legend>ÉQUIPES</legend>
         <div class="q-mb-sm q-col-gutter-md row items-start">
           <q-input
-            outlined
+            filled
+            color="indigo-5"
             v-model="gameForm.numberOfTeams"
             label="Nombre d'équipe"
+            suffix="équipes"
             class="col-6"
             type="number">
             <template v-slot:prepend>
@@ -23,19 +25,26 @@
             </template>
           </q-input>
           <q-input
-            outlined
+            filled
+            color="indigo-5"
             v-model="gameForm.numberOfTeamsPerMatch"
-            label="Nombre d'équipe par match"
+            label="Équipes par match"
+            suffix="équipes"
             class="col-6"
             type="number">
             <template v-slot:prepend>
               <q-icon name="fas fa-user-friends" />
             </template>
           </q-input>
+        </div>
+        <legend class="q-pt-md">JOUEURS</legend>
+        <div class="q-mb-sm q-col-gutter-md row items-start">
           <q-input
-            outlined
+            filled
+            color="indigo-5"
             v-model="gameForm.minTeamSize"
             label="Joueurs minimum par équipe"
+            suffix="joueurs"
             class="col-6"
             type="number">
             <template v-slot:prepend>
@@ -43,9 +52,11 @@
             </template>
           </q-input>
           <q-input
-            outlined
+            filled
+            color="indigo-5"
             v-model="gameForm.maxTeamSize"
             label="Joueurs maximum par équipe"
+            suffix="joueurs"
             class="col-6"
             type="number">
             <template v-slot:prepend>
@@ -53,24 +64,27 @@
             </template>
           </q-input>
         </div>
-        <q-separator />
-        <div class="q-mt-sm">
+        <legend class="q-pt-md">MATCHS</legend>
+         <div class="q-mb-sm q-col-gutter-md row items-start">
           <q-input
-            outlined
+            filled
+            color="indigo-5"
+            class="col-6"
             v-model="gameForm.answerTimerDuration"
-            label="Durée maximum pour donner la réponse (en secondes)"
+            label="Durée de réponse"
+            suffix="secondes"
             type="number">
             <template v-slot:prepend>
               <q-icon name="fas fa-stopwatch" />
             </template>
           </q-input>
-        </div>
-        <q-separator />
-        <div class="q-mt-sm">
           <q-input
-            outlined
+            filled
+            color="indigo-5"
+            class="col-6"
             v-model="gameForm.finalMatchScore"
-            label="Points à atteindre pendant la finale"
+            label="Points gagnants en finale"
+            suffix="points"
             type="number">
             <template v-slot:prepend>
               <q-icon name="fas fa-trophy" />
@@ -83,9 +97,7 @@
 
   <q-footer>
     <div class="row full-width navbar-bottom q-py-sm">
-      <div class="col-6">
-
-      </div>
+      <q-space />
       <div class="col-6 text-right">
         <q-btn
           push
@@ -95,9 +107,24 @@
           icon="fas fa-play"
           label="Lancer la partie"
           aria-label="Lancer la partie"
-          @click="newGame()"
+          @click="confirmNewGame()"
         />
       </div>
     </div>
   </q-footer>
+
+  <q-dialog v-model="confirmGameDialog" position="top" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="fas fa-skull-crossbones" color="orange" text-color="white" />
+          <span class="q-ml-lg text-subtitle1">Attention tu vas supprimer une partie en cours !</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Non je ne veux pas" color="indigo-5" v-close-popup />
+          <q-btn flat label="Oui vas-y !" color="indigo-5" @click="createNewGame()" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
 </q-page>

@@ -5,18 +5,22 @@ export default {
   data() {
     return {
       gameForm: new Game(),
+      confirmGameDialog: false,
     };
   },
   methods: {
-    newGame() {
+    confirmNewGame() {
+      if (!this.game) {
+        this.createNewGame();
+      } else {
+        this.confirmGameDialog = true;
+      }
+    },
+    createNewGame() {
       // On efface tout on recommence
       this.$store.dispatch('entities/deleteAll');
-
       // Enregistrement de la nouvelle partie
-      Game.insert({
-        data: this.gameForm,
-      });
-
+      Game.insert({ data: this.gameForm });
       // Redirection vers la gestion des équipes
       this.$router.push('/equipes');
     },

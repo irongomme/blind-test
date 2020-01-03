@@ -91,7 +91,7 @@
       :minPlayers="Number(game.minTeamSize)"
       :maxPlayers="Number(game.maxTeamSize)"
       @save="saveTeam"
-      @delete="deleteTeam(teamObject)"
+      @delete="confirmTeamDelete(teamObject)"
       @cancel="resetTeam" />
   </q-dialog>
 
@@ -99,18 +99,19 @@
   <q-dialog v-model="deleteTeamConfirm" position="top" persistent>
     <q-card>
       <q-card-section class="row items-center">
-        <q-avatar icon="fas fa-exclamation" color="negative" text-color="white" />
-        <span class="q-ml-sm">
+        <q-avatar icon="fas fa-skull-crossbones" color="orange" text-color="white" />
+        <span class="q-ml-lg">
           Tu es sur le point de supprimer l'équipe "{{ deleteTeamItem.name }}"
         </span>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Annuler" color="primary" v-close-popup />
+        <q-btn flat label="Annuler" color="indigo-5" v-close-popup />
         <q-btn
           flat
           label="Supprimer"
-          color="primary"
+          color="indigo-5"
+          @click="deleteTeam(deleteTeamItem)"
           v-close-popup />
       </q-card-actions>
     </q-card>

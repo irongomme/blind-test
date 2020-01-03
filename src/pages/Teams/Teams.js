@@ -61,11 +61,7 @@ export default {
       Team.insert({
         data: team,
       }).then(() => {
-        this.$q.notify({
-          message: 'Équipe enregistrée !',
-          color: 'positive',
-          icon: 'fas fa-check',
-        });
+        this.$q.notify({ message: 'Équipe enregistrée !' });
       });
 
       this.resetTeam();
@@ -76,11 +72,7 @@ export default {
     },
     deleteTeam(team) {
       Team.delete(team.id).then(() => {
-        this.$q.notify({
-          message: 'Équipe supprimée !',
-          color: 'positive',
-          icon: 'fas fa-check',
-        });
+        this.$q.notify({ message: 'Équipe supprimée !' });
       });
       this.resetTeam();
     },
