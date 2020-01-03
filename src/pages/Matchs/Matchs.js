@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import MatchTeamListCard from '@components/matchs/MatchTeamListCard';
 import DialogMatchSummary from '@components/matchs/DialogMatchSummary';
+import DialogSuccess from '@components/matchs/DialogSuccess';
 import DialogRoundSummary from '@components/rounds/DialogRoundSummary';
 import Game from '@models/game.model';
 import Match from '@models/match.model';
 import MatchHistory from '@models/match_history.model';
 import MatchTeam from '@models/match.team.model';
 import Team from '@models/team.model';
-import AnimatedSuccess from '@json/animated_success.json';
 
 export default {
   name: 'PageMatchs',
@@ -15,20 +15,14 @@ export default {
     MatchTeamListCard,
     DialogMatchSummary,
     DialogRoundSummary,
+    DialogSuccess,
   },
   data() {
     return {
       matchTab: 0,
-      teamPlayingPopup: false,
       teamSuccessPopup: false,
       matchSummaryPopup: false,
       roundSummaryPopup: false,
-      successTeamColor: '',
-      successTeamName: '',
-      successImage: '',
-      playingCountdown: 10,
-      timerPlaying: false,
-      timerSuccess: false,
       wordNumbers: ['one', 'two', 'three', 'four', 'five', 'six'],
     };
   },
@@ -39,40 +33,7 @@ export default {
     next();
   },
   methods: {
-    focusTeam(matchTeam) {
-      // Empécher la double action
-      if (this.playingTeam.is_playing || matchTeam.team.rank > 0) {
-        return;
-      }
-
-      // Nouvelle participation
-      MatchHistory.insert({
-        data: {
-          matchTeam_id: matchTeam.id,
-          is_playing: true,
-        },
-      }).then(() => {
-        // Initialisation du temps restant
-        const tick = 100; // Millisecondes
-        const tickIncrement = (1 / tick) / (this.game.answerTimerDuration / 100);
-        // this.game.answerTimerDuration;
-        // Lancement du compte à rebours
-        this.timerPlaying = setInterval(() => {
-          this.playingCountdown -= tickIncrement;
-
-          if (this.playingCountdown <= 0) {
-            // On stop tout, le point est perdu
-            this.discardPoint();
-          }
-        }, tick);
-      });
-    },
-    stopCountdown() {
-      // Arrêt du timer
-      clearInterval(this.timerPlaying);
-      // Remise à zéro du compteur de progression de la barre de chargement
-      this.playingCountdown = 10;
-    },
+    // Gestion des succès / echec / annulations
     acceptPoint() {
       MatchHistory.update({
         where: this.playingTeam.id,
@@ -81,8 +42,7 @@ export default {
           is_success: true,
         },
       }).then(() => {
-        this.stopCountdown();
-        this.showSuccess(this.playingTeam.matchTeam);
+        this.teamSuccessPopup = true;
         this.resetPending();
 
         const newScore = this.playingTeam.matchTeam.score + 1;
@@ -130,7 +90,6 @@ export default {
           is_pending: true,
         },
       }).then(() => {
-        this.stopCountdown();
         // Si toutes les équipes sont en standby, on réactive tout le monde
         const pendingTeams = this.currentMatch.matchTeams
           .filter(matchTeam => matchTeam.is_pending === true);
@@ -200,24 +159,6 @@ export default {
         });
       }
     },
-    showSuccess(matchTeam) {
-      // Attribution des differentes valeurs pour la popup
-      this.successImage = '/statics/success/';
-      this.successImage += this.animatedSucess[
-        Math.floor(Math.random() * this.animatedSucess.length)
-      ];
-      this.successTeamColor = matchTeam.color;
-      this.successTeamName = matchTeam.team.name;
-      // Ouverture
-      this.teamSuccessPopup = true;
-      // Timer
-      this.timerSuccess = setTimeout(() => {
-        this.teamSuccessPopup = false;
-      }, 8000);
-    },
-    resetSuccess() {
-      clearTimeout(this.timerSuccess);
-    },
     isInBestMatchTeam(matchTeamId) {
       return _.indexOf(this.bestMatchTeam, matchTeamId) !== -1;
     },
@@ -228,7 +169,6 @@ export default {
     },
   },
   computed: {
-    animatedSucess: () => AnimatedSuccess,
     game: () => Game.query().first() || false,
     matchs() {
       const currentMatchs = [];
@@ -308,13 +248,13 @@ export default {
       const lastSuccess = MatchHistory.query()
         .where('is_success', true)
         .where('is_cancelled', false)
-        .with('matchTeam')
+        .with('matchTeam.team')
         .whereHas('matchTeam', (query) => {
           query.where('match_id', this.currentMatch.id);
         })
         .last();
 
-      return lastSuccess ? lastSuccess.matchTeam.team_id : false;
+      return lastSuccess ? lastSuccess.matchTeam : {};
     },
   },
 };

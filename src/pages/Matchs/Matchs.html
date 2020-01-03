@@ -14,49 +14,15 @@
                 class="col-3 col-lg-3 col-sm-6 relative-position"
                 v-for="(matchTeamItem, teamIndex) in matchs[matchIndex].matchTeams"
                 :key="matchTeamItem.team.id">
-                <div style="height: 64px;">
-                  <div
-                    class="text-h3 text-bold text-orange text-center"
-                    v-show="matchTeamItem.is_pending">
-                    ... Zzz ...
-                  </div>
-                  <q-linear-progress
-                    stripe
-                    rounded
-                    style="height: 50px"
-                    :value="playingCountdown / 10"
-                    :color="matchTeamItem.color"
-                    v-if="playingTeam.is_playing && playingTeam.matchTeam.team_id === matchTeamItem.team_id" />
-                </div>
-                    <q-btn
-                      push
-                      color="white"
-                      text-color="red-9"
-                      size="xl"
-                      icon="fas fa-thumbs-down"
-                      class="absolute"
-                      style="z-index: 1;left: 37px;top: 152px;"
-                      v-show="playingTeam.is_playing && playingTeam.matchTeam.team_id === matchTeamItem.team_id"
-                      @click="discardPoint()" />
-                    <q-btn
-                      push
-                      color="white"
-                      text-color="positive"
-                      size="xl"
-                      icon="fas fa-thumbs-up"
-                      class="absolute"
-                      style="z-index: 1;right: 22px;top: 152px;"
-                      v-show="playingTeam.is_playing && playingTeam.matchTeam.team_id === matchTeamItem.team_id"
-                      @click="acceptPoint()" />
-
                 <MatchTeamListCard
                   :match="matchTeamItem"
                   :color="matchTeamItem.color"
                   :star="isInBestMatchTeam(matchTeamItem.id)"
-                  :lastScored="lastScored === matchTeamItem.team_id"
+                  :isLastScored="lastScored.team_id === matchTeamItem.team_id"
                   :gameOver="isGameOver"
                   :playingTeam="playingTeam"
-                  @click="focusTeam(matchTeamItem)" />
+                  @success="acceptPoint()"
+                  @failure="discardPoint()" />
               </div>
             </div>
           </q-tab-panel>
@@ -149,43 +115,7 @@
     </div>
   </q-footer>
 
-  <q-dialog
-    ref="dialog-success"
-    maximized
-    auto-close
-    v-model="teamSuccessPopup"
-    transition-show="fade"
-    transition-hide="fade"
-    @hide="resetSuccess()">
-    <q-card dark style="overflow: hidden;">
-      <q-card-section class="text-h3 text-center q-py-xl">
-        <q-icon name="fas fa-star q-mr-lg" style="margin-bottom:22px;" />
-        Point pour
-        <span :class="'text-uppercase text-' + successTeamColor">
-          {{ successTeamName }}
-        </span>
-        <q-icon name="fas fa-star q-ml-lg" style="margin-bottom:22px;" />
-      </q-card-section>
-      <q-card-section class="flex flex-center">
-        <img
-          contain
-          :src="successImage"
-          class="rounded-borders"
-          style="height: 80vh;" />
-      </q-card-section>
-    </q-card>
-  </q-dialog>
-
-  <q-dialog
-    ref="dialog-team-playing"
-    persistent
-    v-model="teamPlayingPopup"
-    transition-show="slide-down"
-    transition-hide="fade">
-    <q-card dark>
-      OK
-    </q-card>
-  </q-dialog>
+  <DialogSuccess v-model="teamSuccessPopup" :matchTeam="lastScored" />
 
   <DialogMatchSummary
     v-model="matchSummaryPopup"
