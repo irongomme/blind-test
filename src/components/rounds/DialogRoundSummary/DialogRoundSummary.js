@@ -31,24 +31,24 @@ export default {
 
       // Score le plus bas des equipes qualifiees
       const leastScore = Math.min(
-        ...this.qualifiedMatchTeams.map(matchTeam => matchTeam.score),
+        ...this.qualifiedMatchTeams.map(matchTeam => Number(matchTeam.score)),
       );
       // Equipes a ne pas disqualifier tout de suite
       const unqualifiedWaiversTeams = this.unqualifiedMatchTeams
-        .filter(matchTeam => matchTeam.score === leastScore);
+        .filter(matchTeam => Number(matchTeam.score) === leastScore);
 
       // Si des equipes doivent se trouver en ballotage
       if (unqualifiedWaiversTeams.length > 0) {
         // On extrait toutes les équipes à départager
         waiversTeams = this.teamsRanking
-          .filter(matchTeam => matchTeam.score === leastScore);
+          .filter(matchTeam => Number(matchTeam.score) === leastScore);
         // On les insere dans la liste des equipes toujours qualifiees
         unqualifiedWaiversTeams
           .forEach(matchTeam => this.qualifiedMatchTeams.push(matchTeam));
       }
 
       // Si le nombre d'équipe nécessaire pour la finale est atteint
-      if (this.qualifiedMatchTeams.length === this.game.numberOfTeamsPerMatch) {
+      if (this.qualifiedMatchTeams.length === Number(this.game.numberOfTeamsPerMatch)) {
         this.cumulativeScores = false;
       }
 
@@ -92,7 +92,7 @@ export default {
       },
     },
     bestScore() {
-      const scores = this.teamsRanking.map(matchTeam => matchTeam.score);
+      const scores = this.teamsRanking.map(matchTeam => Number(matchTeam.score));
       return Math.max(...scores);
     },
     keepTeamsQuantityOptions() {
@@ -117,7 +117,7 @@ export default {
         .filter((matchTeam, index) => index >= this.keepTeamsQuantity);
     },
     isFinale() {
-      return this.qualifiedMatchTeams.length === this.game.numberOfTeamsPerMatch;
+      return this.qualifiedMatchTeams.length === Number(this.game.numberOfTeamsPerMatch);
     },
   },
 };

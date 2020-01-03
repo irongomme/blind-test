@@ -45,7 +45,7 @@ export default {
         this.teamSuccessPopup = true;
         this.resetPending();
 
-        const newScore = this.playingTeam.matchTeam.score + 1;
+        const newScore = Number(this.playingTeam.matchTeam.score) + 1;
         // Mise à jour du score
         MatchTeam.update({
           where: this.playingTeam.matchTeam.id,
@@ -58,10 +58,10 @@ export default {
 
         // Pour le match final, on va surveiller le score
         if (this.playingTeam.matchTeam.match.is_final
-          && newScore === this.game.finalMatchScore) {
+          && newScore === Number(this.game.finalMatchScore)) {
           // Recherche du rang
           const currentRank = this.currentMatch.matchTeams
-            .filter(match => match.score === this.game.finalMatchScore)
+            .filter(match => Number(match.score) === Number(this.game.finalMatchScore))
             .length;
           // Mise à jour du nouveau vainqueur
           Team.update({
@@ -72,7 +72,7 @@ export default {
           // Si tous les autres ont déjà gagnés
           if (currentRank === this.currentMatch.matchTeams.length - 1) {
             const lastMatchTeam = this.currentMatch.matchTeams
-              .filter(match => match.score < this.game.finalMatchScore);
+              .filter(match => Number(match.score) < Number(this.game.finalMatchScore));
             // Mise à jour du dernier
             Team.update({
               where: lastMatchTeam[0].team_id,
@@ -93,7 +93,7 @@ export default {
         // Si toutes les équipes sont en standby, on réactive tout le monde
         const pendingTeams = this.currentMatch.matchTeams
           .filter(matchTeam => matchTeam.is_pending === true);
-        if (pendingTeams.length === this.game.numberOfTeamsPerMatch - 1) {
+        if (pendingTeams.length === Number(this.game.numberOfTeamsPerMatch) - 1) {
           this.resetPending();
         } else {
           // On met l'équipe en standby pour ce match
@@ -112,14 +112,15 @@ export default {
         data: {
           is_pending: false,
           score: this.playingTeam.is_success
-            ? this.playingTeam.matchTeam.score - 1
+            ? Number(this.playingTeam.matchTeam.score) - 1
             : this.playingTeam.matchTeam.score,
         },
       });
       // Si l'équipe a atteint le score de finale on annulle le rang
-      if (this.playingTeam.is_success && this.playingTeam.matchTeam.team.rank > 0) {
+      if (this.playingTeam.is_success
+        && Number(this.playingTeam.matchTeam.team.rank) > 0) {
         Team.update({
-          where: team => team.rank >= this.playingTeam.matchTeam.team.rank,
+          where: team => Number(team.rank) >= Number(this.playingTeam.matchTeam.team.rank),
           data: { rank: 0 },
         });
       }
@@ -195,18 +196,18 @@ export default {
       return this.matchs[this.matchTab];
     },
     bestMatchTeam() {
-      const scores = this.currentMatch.matchTeams.map(matchTeam => matchTeam.score);
+      const scores = this.currentMatch.matchTeams.map(matchTeam => Number(matchTeam.score));
       const bestScore = Math.max(...scores);
 
       return this.currentMatch.matchTeams
-        .filter(matchTeam => matchTeam.score > 0 && matchTeam.score === bestScore)
+        .filter(matchTeam => Number(matchTeam.score) > 0 && Number(matchTeam.score) === bestScore)
         .map(matchTeam => matchTeam.id);
     },
     matchTeamsRanking() {
       return _.sortBy(this.currentMatch.matchTeams, ['score']).reverse();
     },
     bestMatchScore() {
-      const scores = this.matchTeamsRanking.map(matchTeam => matchTeam.score);
+      const scores = this.matchTeamsRanking.map(matchTeam => Number(matchTeam.score));
       return Math.max(...scores);
     },
     roundTeamsRanking() {
@@ -226,7 +227,7 @@ export default {
     },
     isGameOver() {
       const winningPlayersCount = Team.query()
-        .where(team => team.rank > 0)
+        .where(team => Number(team.rank) > 0)
         .count();
 
       return this.currentMatch.is_final

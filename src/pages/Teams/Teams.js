@@ -39,7 +39,7 @@ export default {
         .get('/statics/json/fake_teams.json')
         .then((fakeTeams) => {
           Team.insert({
-            data: fakeTeams.data.slice(0, this.game.numberOfTeams),
+            data: fakeTeams.data.slice(0, Number(this.game.numberOfTeams)),
           });
         });
     },

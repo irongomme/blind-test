@@ -26,7 +26,7 @@ export default {
   methods: {
     focus() {
       // Empécher la double action
-      if (this.playingTeam.is_playing || this.match.team.rank > 0) {
+      if (this.playingTeam.is_playing || Number(this.match.team.rank) > 0) {
         return;
       }
 
@@ -39,8 +39,7 @@ export default {
       }).then(() => {
         // Initialisation du temps restant
         const tick = 100; // Millisecondes
-        const tickIncrement = (1 / tick) / (this.game.answerTimerDuration / 100);
-        // this.game.answerTimerDuration;
+        const tickIncrement = (1 / tick) / (Number(this.game.answerTimerDuration) / 100);
         // Lancement du compte à rebours
         this.timer = setInterval(() => {
           this.countdown -= tickIncrement;
@@ -74,7 +73,7 @@ export default {
         && this.playingTeam.matchTeam.team_id === this.match.team_id;
     },
     isFinalWon() {
-      return this.match.team.rank > 0;
+      return Number(this.match.team.rank) > 0;
     },
     isMatchClosed() {
       return this.match.match.is_closed || this.isFinalWon;

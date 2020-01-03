@@ -20,7 +20,7 @@ export default {
   methods: {
     addPlayer(playerIndex) {
       // Tant que le nombre max de joueurs n'est pas atteint
-      if (this.team.players.length < this.game.maxTeamSize) {
+      if (this.team.players.length < Number(this.game.maxTeamSize)) {
         this.team.players.push({
           name: '',
         });

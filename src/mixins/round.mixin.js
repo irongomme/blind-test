@@ -57,7 +57,7 @@ export default {
       // Découpage par match des équipes mélangées au hasard
       const matchsTeams = _.chunk(
         _.shuffle(teams),
-        this.game.numberOfTeamsPerMatch,
+        Number(this.game.numberOfTeamsPerMatch),
       );
       // Création des matchs
       matchsTeams.forEach((matchTeams) => {
@@ -69,7 +69,7 @@ export default {
           const emptyScore = options.randomScores ? Math.floor(Math.random() * 10) : 0;
           const initialScore = options.cumulativeScores === true
             // Gestion du cumul des scores
-            ? MatchTeam.query().where('team_id', team.id).last().score
+            ? Number(MatchTeam.query().where('team_id', team.id).last().score)
             // Score initial à zéro
             : emptyScore;
 
@@ -87,7 +87,7 @@ export default {
         matchs.push({
           id: newMatch.id,
           round_id: newRound.id,
-          is_final: this.game.numberOfTeamsPerMatch === teams.length,
+          is_final: teams.length === Number(this.game.numberOfTeamsPerMatch),
           teams: matchTeams,
         });
       });
@@ -104,9 +104,9 @@ export default {
     },
     newSeparationMatch(roundId, matchTeams) {
       const matchs = [];
-      let teamsPerMatch = this.game.numberOfTeamsPerMatch;
+      let teamsPerMatch = Number(this.game.numberOfTeamsPerMatch);
       // On verifie qu'un match ne va pas se retrouver avec une seule équipe
-      if (matchTeams.length % this.game.numberOfTeamsPerMatch === 1) {
+      if (matchTeams.length % Number(this.game.numberOfTeamsPerMatch) === 1) {
         teamsPerMatch -= 1;
       }
       // Découpage par match des équipes mélangées au hasard

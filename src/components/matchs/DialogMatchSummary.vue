@@ -21,19 +21,18 @@
                   stripe
                   rounded
                   style="height: 40px"
-                  :value="(matchTeam.score / bestScore)"
+                  :value="(Number(matchTeam.score) / bestScore)"
                   color="positive"
                   class="q-mt-sm" />
               </q-item-section>
               <q-item-section >
                 <q-badge
-                    class="text-bold text-body2 "
-                    align="middle"
-                    :color="matchTeam.color"
-                    text-color="white"
-                    :label="matchTeam.score + ' Point' + (matchTeam.score > 1 ? 's' : '' )" />
+                  class="text-bold text-body2 "
+                  align="middle"
+                  :color="matchTeam.color"
+                  text-color="white"
+                  :label="`${matchTeam.score} Point${Number(matchTeam.score) > 1 ? 's' : ''}`" />
               </q-item-section>
-
               <q-item-section :class="'text-h6 text-' + matchTeam.color">
                 {{ matchTeam.team.name }}
               </q-item-section>
@@ -77,7 +76,7 @@ export default {
       },
     },
     bestScore() {
-      const scores = this.teamsRanking.map(matchTeam => matchTeam.score);
+      const scores = this.teamsRanking.map(matchTeam => Number(matchTeam.score));
       return Math.max(...scores);
     },
   },

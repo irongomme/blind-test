@@ -33,7 +33,7 @@
                   stripe
                   rounded
                   style="height: 24px;margin-top: 8px;"
-                  :value="(matchTeam.score / bestScore)"
+                  :value="Number(matchTeam.score) / bestScore"
                   color="positive"
                   class="q-mb-sm" />
               </q-item-section>
@@ -44,7 +44,7 @@
                     align="middle"
                     color="indigo-5"
                     text-color="white"
-                    :label="matchTeam.score + ' Point' + (matchTeam.score > 1 ? 's' : '' )" />
+                    :label="`${matchTeam.score} Point${Number(matchTeam.score) > 1 ? 's' : ''}`" />
                 </q-item-label>
               </q-item-section>
               <q-item-section class="text-white text-bold text-subtitle1">
