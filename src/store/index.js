@@ -5,6 +5,7 @@ import VuexPersistence from 'vuex-persist';
 // Modèles
 import Game from '../models/game.model';
 import Match from '../models/match.model';
+import MatchHistory from '../models/match_history.model';
 import MatchTeam from '../models/match.team.model';
 import Player from '../models/player.model';
 import Round from '../models/round.model';
@@ -20,6 +21,7 @@ const database = new VuexORM.Database();
 // Register Models to Database.
 database.register(Game);
 database.register(Match);
+database.register(MatchHistory);
 database.register(MatchTeam);
 database.register(Player);
 database.register(Round);

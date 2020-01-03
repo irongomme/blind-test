@@ -4,6 +4,7 @@ import DialogMatchSummary from '@components/matchs/DialogMatchSummary';
 import DialogRoundSummary from '@components/rounds/DialogRoundSummary';
 import Game from '@models/game.model';
 import Match from '@models/match.model';
+import MatchHistory from '@models/match_history.model';
 import MatchTeam from '@models/match.team.model';
 import Team from '@models/team.model';
 import AnimatedSuccess from '@json/animated_success.json';
@@ -18,13 +19,15 @@ export default {
   data() {
     return {
       matchTab: 0,
-      scoreHistory: [],
+      teamPlayingPopup: false,
       teamSuccessPopup: false,
       matchSummaryPopup: false,
       roundSummaryPopup: false,
       successTeamColor: '',
       successTeamName: '',
       successImage: '',
+      playingCountdown: 10,
+      timerPlaying: false,
       timerSuccess: false,
       wordNumbers: ['one', 'two', 'three', 'four', 'five', 'six'],
     };
@@ -36,59 +39,147 @@ export default {
     next();
   },
   methods: {
-    updateScore(matchTeam, score) {
-      if (score < 0) {
+    focusTeam(matchTeam) {
+      // Empécher la double action
+      if (this.playingTeam.is_playing || matchTeam.team.rank > 0) {
         return;
       }
 
-      // Gain de score
-      if (score > matchTeam.score) {
-        // Ajout du point dans l'historique
-        this.scoreHistory.push(matchTeam.id);
-        // Noticiation
-        this.showSuccess(matchTeam);
-      // Correction de point
-      } else if (score < matchTeam.score) {
-        // Recherche du dernier point attribué à l'équipe
-        const lastMatchTeamScored = _.lastIndexOf(this.scoreHistory, matchTeam.id);
-        this.scoreHistory.splice(lastMatchTeamScored, 1);
-      }
-
-      // Mise à jour du score
-      MatchTeam.update({
-        where: matchTeam.id,
+      // Nouvelle participation
+      MatchHistory.insert({
         data: {
-          match_id: matchTeam.match_id,
-          team_id: matchTeam.team_id,
-          score,
+          matchTeam_id: matchTeam.id,
+          is_playing: true,
         },
-      });
+      }).then(() => {
+        // Initialisation du temps restant
+        const tick = 100; // Millisecondes
+        const tickIncrement = (1 / tick) / (this.game.answerTimerDuration / 100);
+        // this.game.answerTimerDuration;
+        // Lancement du compte à rebours
+        this.timerPlaying = setInterval(() => {
+          this.playingCountdown -= tickIncrement;
 
-      // En finale, il faut détecter la position des gagnants
-      if (matchTeam.match.is_final && score === this.game.finalMatchScore) {
-        // Recherche du rang
-        const currentRank = this.currentMatch.matchTeams
-          .filter(match => match.score === this.game.finalMatchScore)
-          .length;
-        // Mise à jour du nouveau vainqueur
-        Team.update({
-          where: matchTeam.team_id,
-          data: { rank: currentRank },
+          if (this.playingCountdown <= 0) {
+            // On stop tout, le point est perdu
+            this.discardPoint();
+          }
+        }, tick);
+      });
+    },
+    stopCountdown() {
+      // Arrêt du timer
+      clearInterval(this.timerPlaying);
+      // Remise à zéro du compteur de progression de la barre de chargement
+      this.playingCountdown = 10;
+    },
+    acceptPoint() {
+      MatchHistory.update({
+        where: this.playingTeam.id,
+        data: {
+          is_playing: false,
+          is_success: true,
+        },
+      }).then(() => {
+        this.stopCountdown();
+        this.showSuccess(this.playingTeam.matchTeam);
+        this.resetPending();
+
+        const newScore = this.playingTeam.matchTeam.score + 1;
+        // Mise à jour du score
+        MatchTeam.update({
+          where: this.playingTeam.matchTeam.id,
+          data: {
+            match_id: this.playingTeam.matchTeam.match_id,
+            team_id: this.playingTeam.matchTeam.team_id,
+            score: newScore,
+          },
         });
 
-        // Si tous les autres ont déjà gagnés
-        if (currentRank === this.currentMatch.matchTeams.length - 1) {
-          const lastMatchTeam = this.currentMatch.matchTeams
-            .filter(match => match.score < this.game.finalMatchScore);
-          // Mise à jour du dernier
+        // Pour le match final, on va surveiller le score
+        if (this.playingTeam.matchTeam.match.is_final
+          && newScore === this.game.finalMatchScore) {
+          // Recherche du rang
+          const currentRank = this.currentMatch.matchTeams
+            .filter(match => match.score === this.game.finalMatchScore)
+            .length;
+          // Mise à jour du nouveau vainqueur
           Team.update({
-            where: lastMatchTeam[0].team_id,
-            data: { rank: currentRank + 1 },
+            where: this.playingTeam.matchTeam.team_id,
+            data: { rank: currentRank },
+          });
+
+          // Si tous les autres ont déjà gagnés
+          if (currentRank === this.currentMatch.matchTeams.length - 1) {
+            const lastMatchTeam = this.currentMatch.matchTeams
+              .filter(match => match.score < this.game.finalMatchScore);
+            // Mise à jour du dernier
+            Team.update({
+              where: lastMatchTeam[0].team_id,
+              data: { rank: currentRank + 1 },
+            });
+          }
+        }
+      });
+    },
+    discardPoint() {
+      MatchHistory.update({
+        where: this.playingTeam.id,
+        data: {
+          is_playing: false,
+          is_pending: true,
+        },
+      }).then(() => {
+        this.stopCountdown();
+        // Si toutes les équipes sont en standby, on réactive tout le monde
+        const pendingTeams = this.currentMatch.matchTeams
+          .filter(matchTeam => matchTeam.is_pending === true);
+        if (pendingTeams.length === this.game.numberOfTeamsPerMatch - 1) {
+          this.resetPending();
+        } else {
+          // On met l'équipe en standby pour ce match
+          MatchTeam.update({
+            where: this.playingTeam.matchTeam_id,
+            data: { is_pending: true },
           });
         }
+      });
+    },
+    undo() {
+      // Si l'équipe est en sommeil, on la remet en cours
+      // Si elle a gagné un point, on l'annule
+      MatchTeam.update({
+        where: this.playingTeam.matchTeam.id,
+        data: {
+          is_pending: false,
+          score: this.playingTeam.is_success
+            ? this.playingTeam.matchTeam.score - 1
+            : this.playingTeam.matchTeam.score,
+        },
+      });
+      // Si l'équipe a atteint le score de finale on annulle le rang
+      if (this.playingTeam.is_success && this.playingTeam.matchTeam.team.rank > 0) {
+        Team.update({
+          where: this.playingTeam.matchTeam.team_id,
+          data: { rank: 0 },
+        });
       }
+      // Annulation du dernier historique
+      MatchHistory.update({
+        where: this.playingTeam.id,
+        data: { is_cancelled: true },
+      });
+    },
+    resetPending() {
+      this.currentMatch.matchTeams.forEach((pendingTeam) => {
+        MatchTeam.update({
+          where: pendingTeam.id,
+          data: { is_pending: false },
+        });
+      });
     },
     closeMatch() {
+      this.resetPending();
       return Match.update({
         where: this.currentMatch.id,
         data: { is_closed: true },
@@ -163,13 +254,6 @@ export default {
     currentMatch() {
       return this.matchs[this.matchTab];
     },
-    lastScored() {
-      return this.scoreHistory[this.scoreHistory.length - 1];
-    },
-    allScoresCount() {
-      const reducer = (compute, value) => compute + value.score;
-      return this.currentMatch.matchTeams.reduce(reducer, 0);
-    },
     bestMatchTeam() {
       const scores = this.currentMatch.matchTeams.map(matchTeam => matchTeam.score);
       const bestScore = Math.max(...scores);
@@ -207,6 +291,30 @@ export default {
 
       return this.currentMatch.is_final
         && winningPlayersCount === this.currentMatch.matchTeams.length - 1;
+    },
+    playingTeam() {
+      // Dernière entrée de l'historique pour le match en cours
+      return MatchHistory.query()
+        .with('matchTeam.team')
+        .with('matchTeam.match')
+        .where('is_cancelled', false)
+        .whereHas('matchTeam', (query) => {
+          query
+            .where('match_id', this.currentMatch.id);
+        })
+        .last() || new MatchHistory();
+    },
+    lastScored() {
+      const lastSuccess = MatchHistory.query()
+        .where('is_success', true)
+        .where('is_cancelled', false)
+        .with('matchTeam')
+        .whereHas('matchTeam', (query) => {
+          query.where('match_id', this.currentMatch.id);
+        })
+        .last();
+
+      return lastSuccess ? lastSuccess.matchTeam.team_id : false;
     },
   },
 };

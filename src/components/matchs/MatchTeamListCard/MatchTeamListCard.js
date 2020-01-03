@@ -10,6 +10,7 @@ export default {
       type: String,
       default: 'indigo',
     },
+    playingTeam: Object,
   },
   data() {
     return {

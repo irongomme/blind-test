@@ -2,14 +2,7 @@
   <div class="full-width" v-if="matchs">
     <div class="q-gutter-y-md" style="padding-top: 62px;">
       <q-card class="bg-grey-10">
-        <q-card-section class="text-h4 text-center match-card-bar">
-          <q-chip size="lg" class="bg-white text-indigo-5">
-            <q-icon name="fas fa-music" class="q-mr-sm" />
-            <span class="text-bold">{{ allScoresCount }}</span>
-          </q-chip>
-        </q-card-section>
         <q-tab-panels
-          class="q-pa-md q-py-xl"
           v-model="matchTab"
           ref="matchTabs"
           animated>
@@ -18,94 +11,143 @@
             v-for="(matchItem, matchIndex) in matchs" :key="'tab-panel' + matchIndex">
             <div class="row q-col-gutter-md justify-around">
               <div
-                class="col-3 col-lg-3 col-sm-6"
+                class="col-3 col-lg-3 col-sm-6 relative-position"
                 v-for="(matchTeamItem, teamIndex) in matchs[matchIndex].matchTeams"
                 :key="matchTeamItem.team.id">
+                <div style="height: 64px;">
+                  <div
+                    class="text-h3 text-bold text-orange text-center"
+                    v-show="matchTeamItem.is_pending">
+                    ... Zzz ...
+                  </div>
+                  <q-linear-progress
+                    stripe
+                    rounded
+                    style="height: 50px"
+                    :value="playingCountdown / 10"
+                    :color="matchTeamItem.color"
+                    v-if="playingTeam.is_playing && playingTeam.matchTeam.team_id === matchTeamItem.team_id" />
+                </div>
+                    <q-btn
+                      push
+                      color="white"
+                      text-color="red-9"
+                      size="xl"
+                      icon="fas fa-thumbs-down"
+                      class="absolute"
+                      style="z-index: 1;left: 37px;top: 152px;"
+                      v-show="playingTeam.is_playing && playingTeam.matchTeam.team_id === matchTeamItem.team_id"
+                      @click="discardPoint()" />
+                    <q-btn
+                      push
+                      color="white"
+                      text-color="positive"
+                      size="xl"
+                      icon="fas fa-thumbs-up"
+                      class="absolute"
+                      style="z-index: 1;right: 22px;top: 152px;"
+                      v-show="playingTeam.is_playing && playingTeam.matchTeam.team_id === matchTeamItem.team_id"
+                      @click="acceptPoint()" />
+
                 <MatchTeamListCard
                   :match="matchTeamItem"
                   :color="matchTeamItem.color"
                   :star="isInBestMatchTeam(matchTeamItem.id)"
-                  :lastScored="lastScored === matchTeamItem.id"
+                  :lastScored="lastScored === matchTeamItem.team_id"
                   :gameOver="isGameOver"
-                  @updateScore="updateScore" />
+                  :playingTeam="playingTeam"
+                  @click="focusTeam(matchTeamItem)" />
               </div>
             </div>
           </q-tab-panel>
         </q-tab-panels>
-        <q-card-actions align="between">
-          <q-btn
-            flat
-            round
-            color="white"
-            icon="fas fa-backward"
-            size="xl"
-            class="q-ml-md"
-            :disable="!isRoundClosed || matchTab === 0"
-            @click="$refs.matchTabs.previous()">
-            <q-tooltip
-              anchor="center right"
-              self="center left"
-              :offset="[10, 10]"
-              content-style="font-size: 16px"
-              transition-show="scale"
-              transition-hide="scale">
-              Consulter la rencontre précédente
-            </q-tooltip>
-          </q-btn>
-          <q-chip size="xl" class="bg-white q-mt-sm">
-            <q-icon
-              v-show="!currentMatch.is_final"
-              color="indigo-5"
-              :name="`fas fa-dice-${wordNumbers[matchTab]}`"
-              style="font-size: 40px;" />
-            <div
-              class="text-indigo-5 text-uppercase text-h5 text-bold"
-              v-show="currentMatch.is_final">
-              <q-icon name="fas fa-trophy" class="q-mb-xs" />
-              <span class="q-ml-sm">Finale</span>
-            </div>
-          </q-chip>
-          <q-btn flat round v-close-popup
-            color="white"
-            icon="fas fa-forward"
-            size="xl"
-            class="q-mr-md"
-            :disable="matchSummaryPopup || currentMatch.is_final"
-            @click="nextMatch()"
-            v-show="matchTab !== (currentMatch.matchTeams.length - 1)
-              || !currentMatch.is_closed">
-            <q-tooltip
-              anchor="center left"
-              self="center right"
-              :offset="[10, 10]"
-              content-style="font-size: 16px"
-              transition-show="scale"
-              transition-hide="scale">
-              Passer à la rencontre suivante
-            </q-tooltip>
-          </q-btn>
-          <q-btn flat round
-            icon="fas fa-trophy"
-            color="white"
-            size="xl"
-            class="q-mr-md"
-            @click="showRoundSummary()"
-            v-show="matchTab === (currentMatch.matchTeams.length - 1)
-              && currentMatch.is_closed">
-            <q-tooltip
-              anchor="center left"
-              self="center right"
-              :offset="[10, 10]"
-              content-style="font-size: 16px"
-              transition-show="scale"
-              transition-hide="scale">
-              Voir le compte rendu de la manche
-            </q-tooltip>
-          </q-btn>
-        </q-card-actions>
       </q-card>
     </div>
   </div>
+
+  <q-footer>
+    <div class="row full-width navbar-bottom q-py-sm justify-between">
+      <q-btn
+        flat
+        round
+        color="white"
+        icon="fas fa-backward"
+        size="xl"
+        class="q-ml-md"
+        :disable="!isRoundClosed || matchTab === 0"
+        @click="$refs.matchTabs.previous()">
+        <q-tooltip
+          anchor="center right"
+          self="center left"
+          :offset="[10, 10]"
+          content-style="font-size: 16px"
+          transition-show="scale"
+          transition-hide="scale">
+          Consulter la rencontre précédente
+        </q-tooltip>
+      </q-btn>
+      <div class="q-pt-sm">
+        <q-btn
+          flat
+          color="white"
+          class="q-mr-xl"
+          icon="fas fa-undo"
+          size="lg"
+          @click.prevent="undo()"
+          :disabled="!playingTeam.$id" />
+        <q-chip size="xl" class="bg-white q-mt-sm">
+          <q-icon
+            v-show="!currentMatch.is_final"
+            color="indigo-5"
+            :name="`fas fa-dice-${wordNumbers[matchTab]}`"
+            style="font-size: 40px;" />
+          <div
+            class="text-indigo-5 text-uppercase text-h5 text-bold"
+            v-show="currentMatch.is_final">
+            <q-icon name="fas fa-trophy" class="q-mb-xs" />
+            <span class="q-ml-sm">Finale</span>
+          </div>
+        </q-chip>
+      </div>
+      <q-btn flat round v-close-popup
+        color="white"
+        icon="fas fa-forward"
+        size="xl"
+        class="q-mr-md"
+        :disable="matchSummaryPopup || currentMatch.is_final"
+        @click="nextMatch()"
+        v-show="matchTab !== (currentMatch.matchTeams.length - 1)
+          || !currentMatch.is_closed">
+        <q-tooltip
+          anchor="center left"
+          self="center right"
+          :offset="[10, 10]"
+          content-style="font-size: 16px"
+          transition-show="scale"
+          transition-hide="scale">
+          Passer à la rencontre suivante
+        </q-tooltip>
+      </q-btn>
+      <q-btn flat round
+        icon="fas fa-trophy"
+        color="white"
+        size="xl"
+        class="q-mr-md"
+        @click="showRoundSummary()"
+        v-show="matchTab === (currentMatch.matchTeams.length - 1)
+          && currentMatch.is_closed">
+        <q-tooltip
+          anchor="center left"
+          self="center right"
+          :offset="[10, 10]"
+          content-style="font-size: 16px"
+          transition-show="scale"
+          transition-hide="scale">
+          Voir le compte rendu de la manche
+        </q-tooltip>
+      </q-btn>
+    </div>
+  </q-footer>
 
   <q-dialog
     ref="dialog-success"
@@ -131,6 +173,17 @@
           class="rounded-borders"
           style="height: 80vh;" />
       </q-card-section>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog
+    ref="dialog-team-playing"
+    persistent
+    v-model="teamPlayingPopup"
+    transition-show="slide-down"
+    transition-hide="fade">
+    <q-card dark>
+      OK
     </q-card>
   </q-dialog>
 

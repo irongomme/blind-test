@@ -1,89 +1,82 @@
-<q-card flat bordered :class="'bg-' + color" v-cloak>
-  <q-card-section class="text-white text-bold text-center text-h4">
-    {{ match.team.name }}
-  </q-card-section>
+<q-btn
+  flat
+  dense
+  class="full-width"
+  color="indigo-5"
+  :disabled="(
+    playingTeam.is_playing === true
+    && playingTeam.matchTeam.team_id !== match.team.id
+  ) || match.match.is_closed || match.is_pending"
+  @click.prevent="$emit('click')">
+  <q-card :class="`full-width bg-${color}`">
+    <q-card-section class="text-white text-bold text-center text-h4">
+      {{ match.team.name }}
+    </q-card-section>
 
-  <q-card-section class="text-white text-bold">
-    <div class="row q-pt-md">
-      <div class="col-4 text-left">
-        <q-icon
-          class="text-white q-mr-md q-mt-sm"
-          name="fas fa-hamburger"
-          size="md"
-          v-if="lastScored">
-          <q-tooltip
-            anchor="center right"
-            self="center left"
-            :offset="[10, 22]"
-            content-style="font-size: 16px"
-            transition-show="scale"
-            transition-hide="scale">
-            Dernier point marqué
-          </q-tooltip>
-        </q-icon>
-      </div>
-      <div class="col-4 text-center">
-        <q-chip size="xl" class="bg-white">
-          <span v-show="!isFinalWon || !match.match.is_final">{{ match.score }} points</span>
+    <q-card-section class="text-white text-bold">
+      <div class="row">
+        <div class="col-2 text-left">
           <q-icon
-            :class="`text-uppercase text-${color}`"
-            v-show="isFinalWon && match.match.is_final"
-            name="fas fa-trophy"
-            class="q-mr-sm" />
-          <span
-            :class="`text-uppercase text-${color}`"
-            v-show="isFinalWon && match.match.is_final">
-            {{ finalFrenchPosition[match.team.rank - 1] }}
-          </span>
-        </q-chip>
+            class="text-white q-mr-md q-mt-sm"
+            name="fas fa-hamburger"
+            size="md"
+            v-if="lastScored">
+            <q-tooltip
+              anchor="center right"
+              self="center left"
+              :offset="[10, 22]"
+              content-style="font-size: 16px"
+              transition-show="scale"
+              transition-hide="scale">
+              Dernier point marqué
+            </q-tooltip>
+          </q-icon>
+        </div>
+        <div class="col-8 text-center">
+          <q-chip size="xl" class="bg-white">
+            <span v-show="!isFinalWon || !match.match.is_final">{{ match.score }} points</span>
+            <q-icon
+              :class="`text-${color}`"
+              style="font-size: 28px;"
+              v-show="isFinalWon && match.match.is_final"
+              name="fas fa-trophy"
+              class="q-mr-sm" />
+            <span
+              :class="`text-uppercase text-${color}`"
+              v-show="isFinalWon && match.match.is_final">
+              {{ finalFrenchPosition[match.team.rank - 1] }}
+            </span>
+          </q-chip>
+        </div>
+        <div class="col-2 text-right">
+          <q-icon class="text-white q-mr-md q-mt-sm" name="fas fa-medal" size="md" v-if="star">
+            <q-tooltip
+              anchor="center left"
+              self="center right"
+              :offset="[10, 22]"
+              content-style="font-size: 16px"
+              transition-show="scale"
+              transition-hide="scale">
+              Meilleur score
+            </q-tooltip>
+          </q-icon>
+        </div>
       </div>
-      <div class="col-4 text-right">
-        <q-icon class="text-white q-mr-md q-mt-sm" name="fas fa-medal" size="md" v-if="star">
-          <q-tooltip
-            anchor="center left"
-            self="center right"
-            :offset="[10, 22]"
-            content-style="font-size: 16px"
-            transition-show="scale"
-            transition-hide="scale">
-            Meilleur score
-          </q-tooltip>
-        </q-icon>
-      </div>
+    </q-card-section>
+
+    <div class="text-center q-py-lg">
+      <q-img
+        style="height: 300px;"
+        contain
+        :src="`statics/avatars/${match.team.avatar}`">
+      </q-img>
     </div>
-  </q-card-section>
 
-  <div class="text-center q-py-lg">
-    <q-img
-      style="height: 300px;"
-      contain
-      :src="`statics/avatars/${match.team.avatar}`">
-    </q-img>
-  </div>
+    <q-card-section
+      class="text-h6 text-center text-white"
+      style="height: 64px;">
+      <span v-show="isMatchClosed">Match terminé !</span>
+    </q-card-section>
 
-  <q-card-actions align="between" v-show="!isMatchClosed">
-    <q-btn
-      flat
-      v-ripple
-      color="white"
-      icon="fas fa-undo"
-      size="lg"
-      @click.prevent="$emit('updateScore', match, match.score - 1)"
-      :disabled="match.score <= 0" />
-    <q-btn
-      flat
-      v-ripple
-      color="white"
-      icon="fas fa-thumbs-up"
-      size="lg"
-      @click.prevent="$emit('updateScore', match, match.score + 1)" />
-  </q-card-actions>
-
-  <q-card-section
-    class="text-h6 text-center text-white"
-    v-show="isMatchClosed">
-    Match terminé !
-  </q-card-section>
-
-</q-card>
-
+  </q-card>
+</q-btn>

@@ -57,8 +57,20 @@
         <div class="q-mt-sm">
           <q-input
             outlined
+            v-model="gameForm.answerTimerDuration"
+            label="Durée maximum pour donner la réponse (en secondes)"
+            type="number">
+            <template v-slot:prepend>
+              <q-icon name="fas fa-stopwatch" />
+            </template>
+          </q-input>
+        </div>
+        <q-separator />
+        <div class="q-mt-sm">
+          <q-input
+            outlined
             v-model="gameForm.finalMatchScore"
-            label="Points à atteindre pour la finale"
+            label="Points à atteindre pendant la finale"
             type="number">
             <template v-slot:prepend>
               <q-icon name="fas fa-trophy" />
