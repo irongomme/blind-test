@@ -90,10 +90,17 @@ export default {
           is_pending: true,
         },
       }).then(() => {
-        // Si toutes les équipes sont en standby, on réactive tout le monde
+        // Equipes en standby
         const pendingTeams = this.currentMatch.matchTeams
           .filter(matchTeam => matchTeam.is_pending === true);
-        if (pendingTeams.length === Number(this.game.numberOfTeamsPerMatch) - 1) {
+        // Equipes gagnantes
+        const winnerTeams = this.currentMatch.matchTeams
+          .filter(matchTeam => Number(matchTeam.team.rank) > 0);
+        // Nombre d'équipes encore en jeu
+        const remainingTeamsCount = Number(this.game.numberOfTeamsPerMatch) - winnerTeams.length;
+
+        // Si toutes les équipes sont en standby, on réactive tout le monde
+        if (pendingTeams.length >= remainingTeamsCount - 1) {
           this.resetPending();
         } else {
           // On met l'équipe en standby pour ce match

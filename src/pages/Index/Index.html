@@ -1,24 +1,31 @@
 <q-page padding class="flex flex-center">
-  <div style="padding-top: 62px;">
+  <q-drawer
+    dark
+    overlay
+    elevated
+    v-model="rightSidebar"
+    side="right"
+    :width="480"
+    content-class="bg-grey-1">
     <q-card
       flat
-      bordered
-      class="bg-primary">
-      <q-card-section class="bg-indigo-5 text-h6 text-white">
+      square
+      class="bg-indigo-5">
+      <q-card-section class="text-h6 text-white">
         <q-icon name="fas fa-meteor" class="q-mr-md" />
         Réglages de la partie
       </q-card-section>
       <q-separator />
       <q-card-section class="bg-white">
-        <legend>ÉQUIPES</legend>
-        <div class="q-mb-sm q-col-gutter-md row items-start">
+        <legend class="text-subtitle1 text-indigo-5 q-mb-md">ÉQUIPES</legend>
+        <div class="q-mb-sm">
           <q-input
             filled
             color="indigo-5"
             v-model="gameForm.numberOfTeams"
             label="Nombre d'équipe"
             suffix="équipes"
-            class="col-6"
+            class="q-mb-md"
             type="number">
             <template v-slot:prepend>
               <q-icon name="fas fa-users" />
@@ -30,22 +37,22 @@
             v-model="gameForm.numberOfTeamsPerMatch"
             label="Équipes par match"
             suffix="équipes"
-            class="col-6"
+            class="q-mb-md"
             type="number">
             <template v-slot:prepend>
               <q-icon name="fas fa-user-friends" />
             </template>
           </q-input>
         </div>
-        <legend class="q-pt-md">JOUEURS</legend>
-        <div class="q-mb-sm q-col-gutter-md row items-start">
+        <legend class="text-subtitle1 text-indigo-5 q-pt-lg q-mb-md">JOUEURS</legend>
+        <div class="q-mb-sm">
           <q-input
             filled
             color="indigo-5"
             v-model="gameForm.minTeamSize"
-            label="Joueurs minimum par équipe"
+            label="Joueurs mini. par équipe"
             suffix="joueurs"
-            class="col-6"
+            class="q-mb-md"
             type="number">
             <template v-slot:prepend>
               <q-icon name="fas fa-sort-amount-down" />
@@ -55,21 +62,21 @@
             filled
             color="indigo-5"
             v-model="gameForm.maxTeamSize"
-            label="Joueurs maximum par équipe"
+            label="Joueurs maxi. par équipe"
             suffix="joueurs"
-            class="col-6"
+            class="q-mb-md"
             type="number">
             <template v-slot:prepend>
               <q-icon name="fas fa-sort-amount-up" />
             </template>
           </q-input>
         </div>
-        <legend class="q-pt-md">MATCHS</legend>
-         <div class="q-mb-sm q-col-gutter-md row items-start">
+        <legend class="text-subtitle1 text-indigo-5 q-pt-lg q-mb-md">MATCHS</legend>
+         <div class="q-mb-sm">
           <q-input
             filled
             color="indigo-5"
-            class="col-6"
+            class="q-mb-md"
             v-model="gameForm.answerTimerDuration"
             label="Durée de réponse"
             suffix="secondes"
@@ -81,7 +88,7 @@
           <q-input
             filled
             color="indigo-5"
-            class="col-6"
+            class="q-mb-md"
             v-model="gameForm.finalMatchScore"
             label="Points gagnants en finale"
             suffix="points"
@@ -93,7 +100,7 @@
         </div>
       </q-card-section>
     </q-card>
-  </div>
+  </q-drawer>
 
   <q-footer>
     <div class="row full-width navbar-bottom q-py-sm">

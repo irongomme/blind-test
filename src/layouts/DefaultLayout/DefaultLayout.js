@@ -9,7 +9,7 @@ export default {
   mixins: [RoundMixin, TeamMixin],
   data() {
     return {
-      hiddenHeader: false,
+      headerVisibility: true,
       roundFrenchCounter: [
         'première',
         'deuxième',

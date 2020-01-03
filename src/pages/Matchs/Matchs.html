@@ -1,6 +1,6 @@
-<q-page padding class="flex q-pt-xl">
+<q-page padding class="flex flex-center">
   <div class="full-width" v-if="matchs">
-    <div class="q-gutter-y-md" style="padding-top: 62px;">
+    <div class="q-gutter-y-md">
       <q-card class="bg-grey-10">
         <q-tab-panels
           v-model="matchTab"
@@ -83,17 +83,7 @@
         :disable="matchSummaryPopup || currentMatch.is_final"
         @click="nextMatch()"
         v-show="matchTab !== (currentMatch.matchTeams.length - 1)
-          || !currentMatch.is_closed">
-        <q-tooltip
-          anchor="center left"
-          self="center right"
-          :offset="[10, 10]"
-          content-style="font-size: 16px"
-          transition-show="scale"
-          transition-hide="scale">
-          Passer à la rencontre suivante
-        </q-tooltip>
-      </q-btn>
+          || !currentMatch.is_closed" />
       <q-btn flat round
         icon="fas fa-trophy"
         color="white"
@@ -101,16 +91,7 @@
         class="q-mr-md"
         @click="showRoundSummary()"
         v-show="matchTab === (currentMatch.matchTeams.length - 1)
-          && currentMatch.is_closed">
-        <q-tooltip
-          anchor="center left"
-          self="center right"
-          :offset="[10, 10]"
-          content-style="font-size: 16px"
-          transition-show="scale"
-          transition-hide="scale">
-          Voir le compte rendu de la manche
-        </q-tooltip>
+          && currentMatch.is_closed" />
       </q-btn>
     </div>
   </q-footer>

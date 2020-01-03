@@ -1,42 +1,86 @@
-<q-layout view="hHr lpR fFr">
-  <div class="fixed-top full-width" style="z-index: 1;">
-    <div class="row no-wrap">
-      <q-toolbar v-if="!hiddenHeader" class="col-8 q-pl-lg q-py-sm navbar-top">
+<q-layout view="hHh lpR fFf">
+
+  <q-btn
+    round
+    glossy
+    class="shadow-8"
+    style="position: fixed; right: 12px; top: 20px;z-index: 1;"
+    color="dark"
+    icon="fas fa-chevron-down"
+    @click="headerVisibility = true"
+    v-if="!headerVisibility" />
+
+  <q-header elevated v-model="headerVisibility" class="navbar-top">
+
+    <q-toolbar class="q-pl-lg q-py-sm">
+
+      <!-- Partie gauche -->
+      <q-btn
+        flat
+        round
+        :glossy="currentPage === '/'"
+        to="/"
+        icon="fas fa-meteor"
+        aria-label="Écran d'accueil"
+        color="white"
+        size="lg">
+        <q-tooltip
+          anchor="bottom left"
+          self="center left"
+          :offset="[0, 26]"
+          content-style="font-size: 16px"
+          transition-show="scale"
+          transition-hide="scale">
+          Créer une nouvelle partie
+        </q-tooltip>
+      </q-btn>
+
+      <q-btn
+        flat
+        round
+        class="q-ml-xl"
+        :glossy="currentPage === '/equipes'"
+        to="/equipes"
+        v-if="game"
+        icon="fas fa-users"
+        aria-label="Équipes"
+        color="white"
+        size="lg">
+        <q-badge
+          floating
+          color="indigo-5"
+          class="q-mt-sm">
+          {{ teamsCount }}
+        </q-badge>
+        <q-tooltip
+          anchor="bottom left"
+          self="center left"
+          :offset="[0, 26]"
+          content-style="font-size: 16px"
+          transition-show="scale"
+          transition-hide="scale">
+          Les équipes
+        </q-tooltip>
+      </q-btn>
+
+      <div v-if="game && rounds.length > 0" class="q-ml-xl">
         <q-btn
           flat
           round
-          :glossy="currentPage === '/'"
-          to="/"
-          icon="fas fa-meteor"
-          aria-label="Écran d'accueil"
+          :glossy="currentPage === '/manches/' + round.id"
+          icon="fas fa-dice"
+          aria-label="Manches"
           color="white"
-          size="lg">
-          <q-tooltip
-            anchor="bottom left"
-            self="center left"
-            :offset="[0, 26]"
-            content-style="font-size: 16px"
-            transition-show="scale"
-            transition-hide="scale">
-            Créer une nouvelle partie
-          </q-tooltip>
-        </q-btn>
-        <q-btn
-          flat
-          round
-          class="q-ml-xl"
-          :glossy="currentPage === '/equipes'"
-          to="/equipes"
-          v-if="game"
-          icon="fas fa-users"
-          aria-label="Équipes"
-          color="white"
-          size="lg">
+          size="lg"
+          class="q-ml-sm"
+          v-for="(round, roundIndex) in rounds"
+          :key="round.id"
+          :to="'/manches/' + round.id">
           <q-badge
             floating
-            color="indigo-5"
+            :color="currentPage === '/manches/' + round.id ? 'indigo-5' : 'grey-7'"
             class="q-mt-sm">
-            {{ teamsCount }}
+            {{ parseInt(roundIndex) + 1 }}
           </q-badge>
           <q-tooltip
             anchor="bottom left"
@@ -45,50 +89,20 @@
             content-style="font-size: 16px"
             transition-show="scale"
             transition-hide="scale">
-            Gérer les équipes
+            {{ roundFrenchCounter[roundIndex] }} manche
           </q-tooltip>
         </q-btn>
+      </div>
 
-        <div v-if="game && rounds.length > 0" class="q-ml-xl">
-          <q-btn
-            flat
-            round
-            :glossy="currentPage === '/manches/' + round.id"
-            icon="fas fa-dice"
-            aria-label="Manches"
-            color="white"
-            size="lg"
-            class="q-ml-sm"
-            v-for="(round, roundIndex) in rounds"
-            :key="round.id"
-            :to="'/manches/' + round.id">
-            <q-badge
-              floating
-              :color="currentPage === '/manches/' + round.id ? 'indigo-5' : 'grey-7'"
-              class="q-mt-sm">
-              {{ parseInt(roundIndex) + 1 }}
-            </q-badge>
-            <q-tooltip
-              anchor="bottom left"
-              self="center left"
-              :offset="[0, 26]"
-              content-style="font-size: 16px"
-              transition-show="scale"
-              transition-hide="scale">
-              Écran de la {{ roundFrenchCounter[roundIndex] }} manche
-            </q-tooltip>
-          </q-btn>
-        </div>
+      <q-space />
 
-      </q-toolbar>
-
-      <q-toolbar :class="'q-pr-lg ' + (hiddenHeader ? 'col-12' : 'navbar-top col-4 q-py-sm')">
-        <q-space />
+      <!-- Partie droite -->
+      <div>
         <q-btn
           flat
           color="white"
           round
-          v-if="!hiddenHeader"
+          v-if="headerVisibility"
           @click="$q.fullscreen.toggle()"
           :icon="$q.fullscreen.isActive
             ? 'fas fa-compress-arrows-alt'
@@ -100,19 +114,17 @@
             content-style="font-size: 16px"
             transition-show="scale"
             transition-hide="scale">
-            Passer en plein écran
+            Plein écran
           </q-tooltip>
         </q-btn>
         <q-btn
           round
-          :class="'q-ml-md ' + (hiddenHeader ? 'q-mt-md' : '')"
-          :color="hiddenHeader ? 'dark' : 'white'"
-          :flat="!hiddenHeader"
-          :glossy="hiddenHeader"
-          :icon="!hiddenHeader
-            ? 'fas fa-chevron-up'
-            : 'fas fa-chevron-down'"
-          @click="hiddenHeader = !hiddenHeader">
+          class="q-ml-md"
+          color="white"
+          flat
+          icon="fas fa-chevron-up"
+          v-show="currentPage !== '/'"
+          @click="headerVisibility = false">
           <q-tooltip
             anchor="bottom left"
             self="center right"
@@ -120,13 +132,14 @@
             content-style="font-size: 16px"
             transition-show="scale"
             transition-hide="scale">
-            Masquer la barre
+            Masquer
           </q-tooltip>
         </q-btn>
-      </q-toolbar>
+      </div>
 
-    </div>
-  </div>
+    </q-toolbar>
+
+  </q-header>
 
   <q-page-container v-cloak>
     <router-view :key="$route.fullPath" />

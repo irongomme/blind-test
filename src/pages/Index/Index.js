@@ -6,7 +6,11 @@ export default {
     return {
       gameForm: new Game(),
       confirmGameDialog: false,
+      rightSidebar: false,
     };
+  },
+  created() {
+    setTimeout(() => { this.rightSidebar = true; }, 500);
   },
   methods: {
     confirmNewGame() {
