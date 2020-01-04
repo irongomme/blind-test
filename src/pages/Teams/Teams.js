@@ -1,10 +1,10 @@
-import axios from 'axios';
 import TeamMixin from '@mixins/team.mixin';
 import RoundMixin from '@mixins/round.mixin';
 import TeamListCard from '@components/teams/TeamListCard';
 import TeamFormCard from '@components/teams/TeamFormCard';
 import Game from '@models/game.model';
 import Team from '@models/team.model';
+import FakeTeams from '@json/fake_teams.json';
 import EventBus from '@store/event-bus';
 
 export default {
@@ -35,13 +35,9 @@ export default {
       // Reset des équipes
       Team.deleteAll();
       // Création du nombre d'équipes nécessaires
-      axios
-        .get('/statics/json/fake_teams.json')
-        .then((fakeTeams) => {
-          Team.insert({
-            data: fakeTeams.data.slice(0, Number(this.game.numberOfTeams)),
-          });
-        });
+      Team.insert({
+        data: FakeTeams.slice(0, Number(this.game.numberOfTeams)),
+      });
     },
     resetTeam() {
       this.teamFormPopup = false;
