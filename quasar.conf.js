@@ -122,7 +122,7 @@ module.exports = function (ctx) {
         cfg.resolve.alias = {
           ...cfg.resolve.alias,
           '@components': path.resolve(__dirname, './src/components'),
-          '@json': path.resolve(__dirname, './src/json'),
+          '@json': path.resolve(__dirname, './src/statics/json'),
           '@layout': path.resolve(__dirname, './src/layout'),
           '@mixins': path.resolve(__dirname, './src/mixins'),
           '@models': path.resolve(__dirname, './src/models'),

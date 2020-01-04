@@ -28,6 +28,10 @@ export default {
     emitGlobalEvent(event) {
       EventBus.$emit(event);
     },
+    toggleMaximize() {
+      this.headerVisibility = !this.headerVisibility;
+      this.$q.fullscreen.toggle();
+    },
   },
   computed: {
     game: () => Game.query().first() || false,

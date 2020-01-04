@@ -7,7 +7,7 @@
     style="position: fixed; right: 12px; top: 20px;z-index: 1;"
     color="dark"
     icon="fas fa-chevron-down"
-    @click="headerVisibility = true"
+    @click="toggleMaximize()"
     v-if="!headerVisibility" />
 
   <q-header elevated v-model="headerVisibility" class="navbar-top">
@@ -99,32 +99,13 @@
       <!-- Partie droite -->
       <div>
         <q-btn
-          flat
-          color="white"
-          round
-          v-if="headerVisibility"
-          @click="$q.fullscreen.toggle()"
-          :icon="$q.fullscreen.isActive
-            ? 'fas fa-compress-arrows-alt'
-            : 'fas fa-expand-arrows-alt'">
-          <q-tooltip
-            anchor="bottom left"
-            self="center right"
-            :offset="[-50, 36]"
-            content-style="font-size: 16px"
-            transition-show="scale"
-            transition-hide="scale">
-            Plein écran
-          </q-tooltip>
-        </q-btn>
-        <q-btn
           round
           class="q-ml-md"
           color="white"
           flat
           icon="fas fa-chevron-up"
           v-show="currentPage !== '/'"
-          @click="headerVisibility = false">
+          @click="toggleMaximize()">
           <q-tooltip
             anchor="bottom left"
             self="center right"
@@ -132,7 +113,7 @@
             content-style="font-size: 16px"
             transition-show="scale"
             transition-hide="scale">
-            Masquer
+            En grand !
           </q-tooltip>
         </q-btn>
       </div>

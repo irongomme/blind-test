@@ -2,7 +2,7 @@ import _ from 'lodash';
 import Game from '@models/game.model';
 import Player from '@models/player.model';
 import Team from '@models/team.model';
-import Avatars from '@json/avatars2.json';
+import Avatars from '@json/avatars.json';
 
 export default {
   name: 'TeamFormCard',

@@ -2,7 +2,7 @@
   <!-- Entete -->
   <div style="height: 64px;">
     <div
-      class="text-h3 text-bold text-orange text-center"
+      :class="`text-h3 text-bold text-${color} text-center`"
       v-show="match.is_pending">
       ... Zzz ...
     </div>
@@ -17,23 +17,23 @@
 
   <!-- Actions points -->
   <q-btn
-    push
+    unelevated
     color="white"
     text-color="red-9"
     size="xl"
     icon="fas fa-thumbs-down"
     class="absolute"
-    style="z-index: 1;left: 37px;top: 152px;"
+    style="z-index: 1;left: 37px;top: 152px;font-size: 30px;"
     v-show="isPlaying"
     @click="triggerFailure()" />
   <q-btn
-    push
+    unelevated
     color="white"
     text-color="positive"
     size="xl"
     icon="fas fa-thumbs-up"
     class="absolute"
-    style="z-index: 1;right: 22px;top: 152px;"
+    style="z-index: 1;right: 22px;top: 152px;font-size: 30px;"
     v-show="isPlaying"
     @click="triggerSuccess()" />
 
