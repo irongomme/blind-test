@@ -51,11 +51,11 @@ export default {
   },
   methods: {
     showSuccess() {
-      // Attribution des differentes valeurs pour la popup
-      this.successImage = '/statics/success/';
-      this.successImage += this.animatedSucess[
+      const randomAnimation = this.animatedSucess[
         Math.floor(Math.random() * this.animatedSucess.length)
       ];
+      // Attribution des differentes valeurs pour la popup
+      this.successImage = `statics/success/${randomAnimation}`;
       this.teamColor = this.matchTeam.color;
       this.teamName = this.matchTeam.team.name;
       // Timer
