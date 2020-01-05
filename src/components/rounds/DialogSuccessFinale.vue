@@ -10,21 +10,28 @@
     transition-hide="fade"
     @hide="clearTimer()"
     @before-show="showSuccess()">
-    <q-card style="width: 640px;height: 500px;">
-      <q-card-section :class="`text-center text-h2 text-bold text-${teamColor}`">
-        {{ teamName }}
-      </q-card-section>
-      <q-card-section>
-        <q-img
-          style="height: 300px;"
-          contain
-          :src="`statics/avatars/${teamAvatar}`">
-        </q-img>
-      </q-card-section>
-      <q-card-section :class="`text-center text-h2 text-${teamColor}`">
-        {{ global.finalFrenchPosition[teamRank] }}
-      </q-card-section>
-    </q-card>
+    <transition-group
+      appear
+      enter-active-class="animated tada">
+      <q-card
+        style="width: 640px;height: 500px;"
+        v-show="teamDisplay"
+        key="finale-winner-team">
+        <q-card-section :class="`text-center text-h2 text-bold text-${teamColor}`">
+          {{ teamName }}
+        </q-card-section>
+        <q-card-section>
+          <q-img
+            style="height: 300px;"
+            contain
+            :src="`statics/avatars/${teamAvatar}`">
+          </q-img>
+        </q-card-section>
+        <q-card-section :class="`text-center text-h2 text-${teamColor}`">
+          {{ global.finalFrenchPosition[teamRank] }}
+        </q-card-section>
+      </q-card>
+    </transition-group>
   </q-dialog>
 </template>
 
@@ -43,30 +50,36 @@ export default {
   },
   data() {
     return {
+      teamDisplay: false,
       teamColor: '',
       teamName: '',
       teamAvatar: '',
       teamRank: '',
       duration: 8000,
-      timer: false,
+      timerDialog: false,
+      timerTeam: false,
       global,
     };
   },
   methods: {
     showSuccess() {
-      this.teamColor = this.matchTeam.color;
-      this.teamName = this.matchTeam.team.name;
-      this.teamAvatar = this.matchTeam.team.avatar;
-      this.teamRank = this.matchTeam.team.rank - 1;
-      // Timer
-      this.timer = setTimeout(
-        () => { this.$refs['dialog-success-finale'].hide(); }, this.duration,
+      this.timerTeam = setTimeout(
+        () => {
+          this.teamColor = this.matchTeam.color;
+          this.teamName = this.matchTeam.team.name;
+          this.teamAvatar = this.matchTeam.team.avatar;
+          this.teamRank = this.matchTeam.team.rank - 1;
+          this.teamDisplay = true;
+        },
+        500,
       );
       // Timer
       this.timer = setTimeout(() => { this.opened = false; }, this.duration);
     },
     clearTimer() {
-      clearTimeout(this.timer);
+      clearTimeout(this.timerDialog);
+      clearTimeout(this.timerTeam);
+      this.teamDisplay = false;
     },
   },
   computed: {
