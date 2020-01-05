@@ -1,13 +1,27 @@
 <q-card flat bordered class="col-3 col-sm-4 col-xs-6 bg-indigo-5">
+  <!-- Entete -->
   <q-card-section class="text-white text-center text-h6">
-    <q-avatar v-if="team.avatar">
-      <img :src="`statics/avatars/${team.avatar}`">
-    </q-avatar>
-    {{ team.id ? team.name : 'Nouvelle équipe' }}
+    <q-list class="row">
+      <q-item-section avatar v-if="team.avatar">
+        <q-avatar>
+          <img :src="`statics/avatars/${team.avatar}`">
+        </q-avatar>
+      </q-item-section>
+      <q-item-section>
+        {{ team.id ? team.name : 'Nouvelle équipe' }}
+      </q-item-section>
+      <q-item-section side top>
+        <q-btn v-close-popup flat round color="white" icon="fas fa-times" size="md" />
+      </q-item-section>
+    </q-list>
   </q-card-section>
-  <q-card-section class="bg-white">
-    <div class="row">
-      <div class="col-1 self-center">
+
+  <!-- Formulaire -->
+  <q-card-section class="bg-indigo-1">
+
+    <!-- Listing Avatars -->
+    <div class="row q-pt-md">
+      <div class="col-1 self-center text-center">
         <q-btn
           round
           v-show="avatarTab > 0"
@@ -18,6 +32,7 @@
       </div>
       <div class="col-10">
         <q-tab-panels
+          class="bg-indigo-1"
           v-model="avatarTab"
           ref="avatarTabs"
           animated>
@@ -28,24 +43,24 @@
             <q-list class="q-col-gutter-md row items-start">
               <q-item
                 dense
-                class="col-3 q-my-xs q-pb-md"
+                class="col-3 q-my-xs q-py-md"
                 v-for="(avatar, avatarIndex) in avatarPage"
                 :key="avatarIndex"
                 clickable
                 v-ripple
-                :disable="isAvatarFree(avatar)"
+                :disable="isAvatarFree(avatar) && avatar !== team.avatar"
                 :active="team.avatar === avatar"
-                active-class="bg-blue-2"
+                active-class="bg-indigo-5"
                 @click="selectAvatar(avatar)">
                 <q-item-section>
                   <q-img contain :src="`statics/avatars/${avatar}`" style="height: 50px;" />
                 </q-item-section>
               </q-item>
-          </q-list>
+            </q-list>
           </q-tab-panel>
         </q-tab-panels>
       </div>
-      <div class="col-1 self-center">
+      <div class="col-1 self-center text-center">
         <q-btn
           round
           v-show="avatarTab < avatarsChunk.length - 1"
@@ -55,8 +70,12 @@
           @click="$refs.avatarTabs.next()" />
       </div>
     </div>
+  </q-card-section>
+
+  <!-- Champ formulaire équipe -->
+  <q-card-section class="bg-white">
     <q-input
-      outlined
+      filled
       v-model="team.name"
       label="Nom de l'équipe"
       class="q-py-md"
@@ -66,7 +85,7 @@
       <template v-slot:append>
         <q-btn
           flat
-          color="indigo-3"
+          color="indigo-5"
           icon="fas fa-user-plus"
           @click="addPlayer(0)"
           v-show="team.players.length == 0"
@@ -74,25 +93,22 @@
         />
       </template>
     </q-input>
+    <!-- Champ formulaire joueurs -->
     <div
       v-for="(player, playerIndex) in team.players"
       v-bind:key="playerIndex">
       <q-input
         dense
-        outlined
         class="q-pb-md"
         v-model="team.players[playerIndex].name"
         v-bind:label="'Nom du joueur ' + (parseInt(playerIndex) + 1)"
         v-bind:ref="'playerName' + playerIndex"
         @keyup.enter="addPlayer(parseInt(playerIndex) + 1)"
       >
-        <template v-slot:before>
-          <q-icon class="fas fa-user" size="xs" />
-        </template>
         <template v-slot:append>
           <q-btn
             flat
-            color="indigo-3"
+            color="indigo-5"
             icon="fas fa-user-plus"
             @click="addPlayer(parseInt(playerIndex) + 1)"
             v-show="parseInt(playerIndex) + 1 == team.players.length
@@ -112,21 +128,22 @@
       </q-input>
     </div>
   </q-card-section>
-  <q-card-actions class="bg-blue-grey-2 text-right q-px-md" align="between">
+
+  <!-- Footer -->
+  <q-card-actions class="bg-indigo-1 text-right q-px-md" align="right">
     <q-btn
-      round
+      flat
       color="white"
       class="text-red-14"
       icon="fas fa-trash"
-      size="sm"
+      size="md"
       v-show="team.id"
       @click="$emit('delete')"
     />
-    <q-space v-show="!team.id" />
     <q-btn
-      push
-      size="lg"
-      class="text-white"
+      flat
+      size="md"
+      class="text-white q-px-sm"
       color="indigo-5"
       label="C'est bon !"
       icon="fas fa-check"

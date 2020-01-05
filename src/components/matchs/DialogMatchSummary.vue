@@ -41,7 +41,7 @@
         </div>
       </q-card-section>
 
-      <q-card-actions align="right" class="bg-blue-grey-2">
+      <q-card-actions align="right" class="bg-indigo-1">
         <q-btn
           push
           v-ripple

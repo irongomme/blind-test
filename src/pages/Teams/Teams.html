@@ -1,16 +1,43 @@
-<q-page padding class="flex column">
+<q-page padding>
 
-  <!-- Listing equipes -->
-  <div class="row items-start q-col-gutter-md">
-    <div
-      class="col-3 col-md-3 col-sm-6 col-xs-6"
-      v-for="teamItem in teams"
-      :key="teamItem.id">
-      <TeamListCard
-        :team="teamItem"
-        @delete="confirmTeamDelete(teamItem)"
-        @edit="editTeam"
-        alterable />
+  <div class="flex flex-center" v-if="teams.length === 0">
+    <q-card>
+      <q-card-section class="text-h5 bg-indigo-5 text-white">
+        <q-avatar
+          class="q-mr-sm"
+          color="white"
+          text-color="indigo-5"
+          icon="fas fa-poo" />
+        Aucune équipe, crée ta première !
+      </q-card-section>
+      <q-separator />
+      <q-card-actions align="right">
+        <q-btn
+          push
+          size="lg"
+          class="q-px-sm"
+          icon="fas fa-user-friends"
+          label="Nouvelle équipe"
+          aria-label="Nouvelle équipe"
+          color="indigo-5"
+          @click="emitGlobalEvent('addTeam')" />
+      </q-card-actions>
+    </q-card>
+  </div>
+
+  <div class="flex column" v-if="teams.length > 0">
+    <!-- Listing equipes -->
+    <div class="row items-start q-col-gutter-lg">
+      <div
+        class="col-3 col-md-3 col-sm-6 col-xs-6"
+        v-for="teamItem in teams"
+        :key="teamItem.id">
+        <TeamListCard
+          :team="teamItem"
+          @delete="confirmTeamDelete(teamItem)"
+          @edit="editTeam"
+          alterable />
+      </div>
     </div>
   </div>
 
@@ -94,23 +121,23 @@
   </q-dialog>
 
   <!-- Suppression équipe -->
-  <q-dialog v-model="deleteTeamConfirm" position="top" persistent>
+  <q-dialog v-model="deleteTeamConfirm" persistent>
     <q-card>
       <q-card-section class="row items-center">
-        <q-avatar icon="fas fa-skull-crossbones" color="orange" text-color="white" />
+        <q-avatar icon="fas fa-skull-crossbones" color="indigo-5" text-color="white" />
         <span class="q-ml-lg">
           Tu es sur le point de supprimer l'équipe "{{ deleteTeamItem.name }}"
         </span>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Annuler" color="indigo-5" v-close-popup />
         <q-btn
           flat
           label="Supprimer"
           color="indigo-5"
           @click="deleteTeam(deleteTeamItem)"
           v-close-popup />
+        <q-btn flat label="Annuler" color="indigo-5" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>

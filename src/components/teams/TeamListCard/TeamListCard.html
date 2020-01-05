@@ -1,32 +1,33 @@
-<q-card flat bordered :class="'bg-' + color">
-  <q-card-section class="text-white text-h6">
-    <q-btn
-      flat
-      rounded
-      class="float-right"
-      color="white"
-      icon-right="fas fa-pencil-alt"
-      size="md"
-      v-if="alterable"
-      @click="$emit('edit', team)"
-    />
-    <q-avatar>
-      <img :src="`statics/avatars/${team.avatar}`">
-    </q-avatar>
-    {{ team.name }}
-  </q-card-section>
+<q-btn
+    flat
+    dense
+    color="indigo-5"
+    class="full-width"
+    v-if="alterable"
+    @click="$emit('edit', team)">
+  <q-card flat bordered :class="`full-width bg-${color}`">
+    <q-card-section class="text-white text-h6">
+      <q-list class="row">
+        <q-item-section avatar>
+          <q-avatar>
+            <img :src="`statics/avatars/${team.avatar}`">
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>
+          {{ team.name }}
+        </q-item-section>
+      </q-list>
+    </q-card-section>
 
-  <q-list class="bg-white" separator>
-    <q-item v-ripple v-for="player in team.players" :key="player.id">
-      <q-item-section avatar>
-        <q-icon :color="color" name="fas fa-user" />
-      </q-item-section>
-      <q-item-section>
-        <q-item-label>
-          {{ player.name }}
-        </q-item-label>
-      </q-item-section>
-    </q-item>
-  </q-list>
-</q-card>
 
+    <q-list class="bg-white" separator>
+      <q-item v-ripple v-for="player in team.players" :key="player.id">
+        <q-item-section>
+          <q-item-label>
+            {{ player.name }}
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-list>
+  </q-card>
+</q-btn>
