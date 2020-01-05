@@ -86,8 +86,9 @@
       <q-btn
         push
         v-ripple
+        class="q-px-sm"
         color="indigo-5"
-        icon-right="fas fa-dice"
+        icon="fas fa-dice"
         :label="isFinale ? 'Jouer la finale' : 'Nouvelle manche'"
         @click="newRound({ cumulativeScores: isFinale ? false : cumulativeScores })"
         size="lg"

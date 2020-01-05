@@ -101,6 +101,7 @@
 
   <DialogMatchSummary
     v-model="matchSummaryPopup"
+    :isLastMatch="matchTab + 1 === matchs.length"
     :teamsRanking="matchTeamsRanking"
     @next-match="nextMatch()" />
 

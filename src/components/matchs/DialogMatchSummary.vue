@@ -45,8 +45,10 @@
         <q-btn
           push
           v-ripple
-          icon-right="fas fa-forward"
-          label="Match suivant"
+          class="q-px-sm"
+          :icon="isLastMatch ? 'fas fa-trophy' : ''"
+          :icon-right="!isLastMatch ? 'fas fa-forward': ''"
+          :label="isLastMatch ? 'Bilan de la manche' : 'Match suivant'"
           color="indigo-5"
           size="lg"
           @click="$emit('next-match')"
@@ -64,6 +66,7 @@ export default {
       type: Boolean,
       required: true,
     },
+    isLastMatch: Boolean,
     teamsRanking: Array,
   },
   computed: {
