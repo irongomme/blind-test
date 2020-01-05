@@ -57,7 +57,7 @@ export default {
       this.teamColor = this.matchTeam.color;
       this.teamName = this.matchTeam.team.name;
       this.teamAvatar = this.matchTeam.team.avatar;
-      this.teamRank = this.matchTeam.team.rank + 1;
+      this.teamRank = this.matchTeam.team.rank - 1;
       // Timer
       this.timer = setTimeout(
         () => { this.$refs['dialog-success-finale'].hide(); }, this.duration,
