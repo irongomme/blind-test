@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import TeamMixin from '@mixins/team.mixin';
 import RoundMixin from '@mixins/round.mixin';
 import TeamListCard from '@components/teams/TeamListCard';
@@ -36,7 +37,7 @@ export default {
       Team.deleteAll();
       // Création du nombre d'équipes nécessaires
       Team.insert({
-        data: FakeTeams.slice(0, Number(this.game.numberOfTeams)),
+        data: _.cloneDeep(FakeTeams).slice(0, Number(this.game.numberOfTeams)),
       });
     },
     resetTeam() {
