@@ -1,0 +1,30 @@
+export const global = {
+  finalFrenchPosition: [
+    '1er',
+    '2ème',
+    '3ème',
+    '4ème',
+    '5ème',
+    '6ème',
+  ],
+  roundFrenchCounter: [
+    'première',
+    'deuxième',
+    'troisième',
+    'quatrième',
+    'cinquième',
+    'sixième',
+    'septième',
+    'huitième',
+    'neuvième',
+    'dixième',
+  ],
+  wordNumbers: [
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+  ],
+};

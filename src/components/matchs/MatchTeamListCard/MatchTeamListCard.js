@@ -1,5 +1,6 @@
 import Game from '@models/game.model';
 import MatchHistory from '@models/match_history.model';
+import { global } from '@utils/global.js';
 
 export default {
   name: 'TeamListCard',
@@ -18,9 +19,9 @@ export default {
   },
   data() {
     return {
-      finalFrenchPosition: ['1er', '2ème', '3ème', '4ème', '5ème', '6ème'],
       countdown: 10,
       timer: false,
+      global,
     };
   },
   methods: {

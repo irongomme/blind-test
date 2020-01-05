@@ -3,6 +3,7 @@ import TeamMixin from '@mixins/team.mixin';
 import Game from '@models/game.model';
 import Round from '@models/round.model';
 import EventBus from '@store/event-bus';
+import { global } from '@utils/global.js';
 
 export default {
   name: 'DefaultLayout',
@@ -10,18 +11,7 @@ export default {
   data() {
     return {
       headerVisibility: true,
-      roundFrenchCounter: [
-        'première',
-        'deuxième',
-        'troisième',
-        'quatrième',
-        'cinquième',
-        'sixième',
-        'septième',
-        'huitième',
-        'neuvième',
-        'dixième',
-      ],
+      global,
     };
   },
   methods: {

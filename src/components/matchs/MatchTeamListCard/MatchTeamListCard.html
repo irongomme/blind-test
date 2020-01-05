@@ -89,7 +89,7 @@
               <span
                 :class="`text-uppercase text-${color}`"
                 v-show="isFinalWon && match.match.is_final">
-                {{ finalFrenchPosition[Number(match.team.rank) - 1] }}
+                {{ global.finalFrenchPosition[Number(match.team.rank) - 1] }}
               </span>
             </q-chip>
           </div>

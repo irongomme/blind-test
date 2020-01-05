@@ -9,6 +9,7 @@ import Match from '@models/match.model';
 import MatchHistory from '@models/match_history.model';
 import MatchTeam from '@models/match.team.model';
 import Team from '@models/team.model';
+import { global } from '@utils/global.js';
 
 export default {
   name: 'PageMatchs',
@@ -26,7 +27,7 @@ export default {
       teamSuccessFinalePopup: false,
       matchSummaryPopup: false,
       roundSummaryPopup: false,
-      wordNumbers: ['one', 'two', 'three', 'four', 'five', 'six'],
+      global,
     };
   },
   beforeRouteUpdate(to, from, next) {

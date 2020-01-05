@@ -129,7 +129,8 @@ module.exports = function (ctx) {
           '@models': path.resolve(__dirname, './src/models'),
           '@pages': path.resolve(__dirname, './src/pages'),
           '@statics': path.resolve(__dirname, './src/statics'),
-          '@store': path.resolve(__dirname, './src/store')
+          '@store': path.resolve(__dirname, './src/store'),
+          '@utils': path.resolve(__dirname, './src/utils'),
         }
       }
     },
