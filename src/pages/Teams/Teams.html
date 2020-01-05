@@ -1,8 +1,8 @@
-<q-page padding>
+<q-page padding :class="teams.length === 0 ? 'flex flex-center' : 'flex column'">
 
-  <div class="flex flex-center" v-if="teams.length === 0">
+  <div v-if="teams.length === 0">
     <q-card>
-      <q-card-section class="text-h5 bg-indigo-5 text-white">
+      <q-card-section class="text-h5 bg-indigo-5 q-py-xl text-white">
         <q-avatar
           class="q-mr-sm"
           color="white"
@@ -13,7 +13,7 @@
       <q-separator />
       <q-card-actions align="right">
         <q-btn
-          push
+          flat
           size="lg"
           class="q-px-sm"
           icon="fas fa-user-friends"
@@ -25,7 +25,7 @@
     </q-card>
   </div>
 
-  <div class="flex column" v-if="teams.length > 0">
+  <div v-if="teams.length > 0">
     <!-- Listing equipes -->
     <div class="row items-start q-col-gutter-lg">
       <div
