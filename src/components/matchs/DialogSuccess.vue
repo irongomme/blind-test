@@ -52,7 +52,7 @@ export default {
   },
   data() {
     return {
-      duration: 80000,
+      duration: 8000,
       timerDialog: false,
       timerTeam: false,
       teamDisplay: false,
