@@ -61,6 +61,7 @@
           icon="fas fa-undo"
           size="lg"
           @click.prevent="undo()"
+          v-show="!currentMatch.is_closed"
           :disabled="!playingTeam.$id" />
         <q-chip size="xl" class="bg-white q-mt-sm">
           <q-icon
