@@ -62,6 +62,8 @@ export default {
       this.timer = setTimeout(
         () => { this.$refs['dialog-success-finale'].hide(); }, this.duration,
       );
+      // Timer
+      this.timer = setTimeout(() => { this.opened = false; }, this.duration);
     },
     clearTimer() {
       clearTimeout(this.timer);

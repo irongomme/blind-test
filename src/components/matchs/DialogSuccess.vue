@@ -60,7 +60,7 @@ export default {
       this.teamColor = this.matchTeam.color;
       this.teamName = this.matchTeam.team.name;
       // Timer
-      this.timer = setTimeout(() => { this.$refs['dialog-success'].hide(); }, this.duration);
+      this.timer = setTimeout(() => { this.opened = false; }, this.duration);
     },
     clearTimer() {
       clearTimeout(this.timer);
