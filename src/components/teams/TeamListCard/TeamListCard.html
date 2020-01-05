@@ -16,18 +16,33 @@
         <q-item-section>
           {{ team.name }}
         </q-item-section>
+        <q-item-section side>
+          <q-btn
+            flat
+            color="white"
+            :icon="isPlayersVisibles ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
+            @click.prevent="isPlayersVisibles = !isPlayersVisibles" />
+        </q-item-section>
       </q-list>
     </q-card-section>
 
-
-    <q-list class="bg-white" separator>
-      <q-item v-ripple v-for="player in team.players" :key="player.id">
-        <q-item-section>
-          <q-item-label>
-            {{ player.name }}
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
+    <transition-group
+      appear
+      enter-active-class="animated bounce"
+      leave-active-class="animated pulse"
+      class="bg-white">
+    <q-card-section key="playersList" v-show="isPlayersVisibles">
+    <!-- Example with wrapping only one DOM element / component -->
+      <q-list class="bg-white" separator>
+        <q-item v-ripple v-for="player in team.players" :key="player.id">
+          <q-item-section>
+            <q-item-label>
+              {{ player.name }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-card-section>
+    </transition-group>
   </q-card>
 </q-btn>

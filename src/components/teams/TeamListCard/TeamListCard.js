@@ -8,4 +8,9 @@ export default {
       default: 'indigo-5',
     },
   },
+  data() {
+    return {
+      isPlayersVisibles: false,
+    };
+  },
 };
