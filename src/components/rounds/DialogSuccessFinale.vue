@@ -11,18 +11,18 @@
     @hide="clearTimer()"
     @before-show="showSuccess()">
     <q-card style="width: 640px;height: 500px;">
-      <q-card-section :class="`text-center text-h2 text-bold text-${matchTeam.color}`">
-        {{ matchTeam.team.name }}
+      <q-card-section :class="`text-center text-h2 text-bold text-${teamColor}`">
+        {{ teamName }}
       </q-card-section>
       <q-card-section>
         <q-img
           style="height: 300px;"
           contain
-          :src="`statics/avatars/${matchTeam.team.avatar}`">
+          :src="`statics/avatars/${teamAvatar}`">
         </q-img>
       </q-card-section>
-      <q-card-section :class="`text-center text-h2 text-${matchTeam.color}`">
-        {{ global.finalFrenchPosition[matchTeam.team.rank - 1] }}
+      <q-card-section :class="`text-center text-h2 text-${teamColor}`">
+        {{ global.finalFrenchPosition[teamRank] }}
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -42,6 +42,10 @@ export default {
   },
   data() {
     return {
+      teamColor: '',
+      teamName: '',
+      teamAvatar: '',
+      teamRank: '',
       duration: 8000,
       timer: false,
       global,
@@ -49,6 +53,10 @@ export default {
   },
   methods: {
     showSuccess() {
+      this.teamColor = this.matchTeam.color;
+      this.teamName = this.matchTeam.team.name;
+      this.teamAvatar = this.matchTeam.team.avatar;
+      this.teamRank = this.matchTeam.team.rank + 1;
       // Timer
       this.timer = setTimeout(
         () => { this.$refs['dialog-success-finale'].hide(); }, this.duration,
