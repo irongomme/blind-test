@@ -98,6 +98,7 @@
   </q-footer>
 
   <DialogSuccess v-model="teamSuccessPopup" :matchTeam="lastScored" />
+  <DialogSuccessFinale v-model="teamSuccessFinalePopup" :matchTeam="lastScored" />
 
   <DialogMatchSummary
     v-model="matchSummaryPopup"

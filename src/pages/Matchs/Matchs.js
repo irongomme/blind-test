@@ -3,6 +3,7 @@ import MatchTeamListCard from '@components/matchs/MatchTeamListCard';
 import DialogMatchSummary from '@components/matchs/DialogMatchSummary';
 import DialogSuccess from '@components/matchs/DialogSuccess';
 import DialogRoundSummary from '@components/rounds/DialogRoundSummary';
+import DialogSuccessFinale from '@components/rounds/DialogSuccessFinale';
 import Game from '@models/game.model';
 import Match from '@models/match.model';
 import MatchHistory from '@models/match_history.model';
@@ -16,11 +17,13 @@ export default {
     DialogMatchSummary,
     DialogRoundSummary,
     DialogSuccess,
+    DialogSuccessFinale,
   },
   data() {
     return {
       matchTab: 0,
       teamSuccessPopup: false,
+      teamSuccessFinalePopup: false,
       matchSummaryPopup: false,
       roundSummaryPopup: false,
       wordNumbers: ['one', 'two', 'three', 'four', 'five', 'six'],
@@ -42,11 +45,14 @@ export default {
           is_success: true,
         },
       }).then(() => {
-        this.teamSuccessPopup = true;
+        // Annulation des équipes en sommeil
         this.resetPending();
 
+        // Gestion du score
         const newScore = Number(this.playingTeam.matchTeam.score) + 1;
-        // Mise à jour du score
+        const isFinaleScoreReached = this.playingTeam.matchTeam.match.is_final
+          && newScore === Number(this.game.finalMatchScore);
+        // Mise à jour du score dans l'équipe
         MatchTeam.update({
           where: this.playingTeam.matchTeam.id,
           data: {
@@ -57,8 +63,7 @@ export default {
         });
 
         // Pour le match final, on va surveiller le score
-        if (this.playingTeam.matchTeam.match.is_final
-          && newScore === Number(this.game.finalMatchScore)) {
+        if (isFinaleScoreReached) {
           // Recherche du rang
           const currentRank = this.currentMatch.matchTeams
             .filter(match => Number(match.score) === Number(this.game.finalMatchScore))
@@ -79,6 +84,11 @@ export default {
               data: { rank: currentRank + 1 },
             });
           }
+          // Popup victoire
+          this.teamSuccessFinalePopup = true;
+        } else {
+          // Popup point équipe
+          this.teamSuccessPopup = true;
         }
       });
     },
