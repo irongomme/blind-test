@@ -9,19 +9,28 @@
     @hide="clearTimer()"
     @before-show="showSuccess()">
     <q-card dark style="overflow: hidden;">
-      <q-card-section class="text-h3 text-center q-py-xl">
-        <q-icon name="fas fa-star q-mr-lg" style="margin-bottom:22px;" />
-        Point pour
-        <span :class="'text-uppercase text-' + teamColor">
-          {{ teamName }}
-        </span>
-        <q-icon name="fas fa-star q-ml-lg" style="margin-bottom:22px;" />
-      </q-card-section>
+      <q-card-section v-show="!teamDisplay" style="height: 178px;" />
+      <transition-group
+      appear
+      enter-active-class="animated swing">
+        <q-card-section
+          :class="`text-h2 text-center q-py-xl text-${teamColor}`"
+          v-show="teamDisplay"
+          key="team-name-section">
+          <q-icon name="fas fa-star q-mr-lg" style="margin-bottom:22px;" />
+          Point pour
+          <span class="text-uppercase text-bold">
+            {{ teamName }}
+          </span>
+          <q-icon name="fas fa-star q-ml-lg" style="margin-bottom:22px;" />
+        </q-card-section>
+      </transition-group>
+
       <q-card-section class="flex flex-center">
         <img
           contain
           :src="successImage"
-          class="rounded-borders"
+          class="rounded-borders shadow-8"
           style="height: 80vh;" />
       </q-card-section>
     </q-card>
@@ -43,8 +52,10 @@ export default {
   },
   data() {
     return {
-      duration: 8000,
-      timer: false,
+      duration: 80000,
+      timerDialog: false,
+      timerTeam: false,
+      teamDisplay: false,
       teamColor: '',
       teamName: '',
       successImage: '',
@@ -55,15 +66,22 @@ export default {
       const randomAnimation = this.animatedSucess[
         Math.floor(Math.random() * this.animatedSucess.length)
       ];
+
       // Attribution des differentes valeurs pour la popup
-      this.successImage = `statics/success/${randomAnimation}`;
       this.teamColor = this.matchTeam.color;
+      this.successImage = `statics/success/${randomAnimation}`;
       this.teamName = this.matchTeam.team.name;
+
+      // Puis on retarde l'affichage
+      this.timerTeam = setTimeout(() => { this.teamDisplay = true; }, 500);
+
       // Timer
-      this.timer = setTimeout(() => { this.opened = false; }, this.duration);
+      this.timerDialog = setTimeout(() => { this.opened = false; }, this.duration);
     },
     clearTimer() {
-      clearTimeout(this.timer);
+      clearTimeout(this.timerDialog);
+      clearTimeout(this.timerTeam);
+      this.teamDisplay = false;
     },
   },
   computed: {

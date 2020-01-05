@@ -74,7 +74,7 @@ export default {
         500,
       );
       // Timer
-      this.timer = setTimeout(() => { this.opened = false; }, this.duration);
+      this.timerDialog = setTimeout(() => { this.opened = false; }, this.duration);
     },
     clearTimer() {
       clearTimeout(this.timerDialog);
